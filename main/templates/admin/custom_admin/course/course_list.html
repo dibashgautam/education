@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Course List{% endblock %}
+
+{% block content %}
+<!-- alertify -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Your Courses</h3>
+       
+    </div>
+
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow">
+
+                <img src="{{ course.image.url }}" class="card-img-top rounded" height="150">
+
+                <h5 class="mt-2">{{ course.title }}</h5>
+                <p class="text-muted">{{ course.category.title }}</p>
+
+                <p>
+                    <b>Price:</b> <strike>Rs {{ course.original_price }}</strike><br>
+                    <b>Discount:</b> {{ course.discount_percent }}%<br>
+                    <b>Final:</b> Rs {{ course.discounted_price }}
+                </p>
+
+                <a href="{% url 'main:edit_course' course.id %}" class="btn btn-dark w-100">
+                    Edit
+                </a>
+
+            </div>
+        </div>
+        {% empty %}
+        <p>No courses added yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% if messages %}
+
+    {% for message in messages %}
+    <script>
+        alertify.set('notifier','position', 'top-right');
+        alertify.success("{{message}}");
+    </script>
+        
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

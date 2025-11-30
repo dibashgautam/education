@@ -1,0 +1,110 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/main/admission.css' %}">
+
+<div class="container py-5">
+    <div class="card shadow p-4 rounded-4" style="max-width: 800px; margin:auto;">
+        <h3 class="mb-4">Online Application Form</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="hidden" name="institute" id="hiddenInstitute">
+            <input type="hidden" name="category" id="hiddenCategory">
+            <input type="hidden" name="course" id="hiddenCourse">
+
+            <label>Student Name</label>
+            {{ form.student_name }}
+
+            <label>Email</label>
+            {{ form.email }}
+
+            <label>Phone</label>
+            {{ form.phone }}
+
+            <label>Address</label>
+            {{ form.address }}
+
+            <label>Date of Birth</label>
+            {{ form.dob }}
+
+            <label>Gender</label>
+            {{ form.gender }}
+
+            <label>Institute</label>
+            {{ form.institute }}
+
+            <label>Category</label>
+            {{ form.category }}
+
+            <label>Course</label>
+            {{ form.course }}
+
+            <hr>
+
+            <h5>Upload Required Documents</h5>
+
+            <label>Photo</label>
+            <input type="file" name="photo" class="form-control">
+
+            <label>Marksheet</label>
+            <input type="file" name="marksheet" class="form-control">
+
+            <label>ID Card</label>
+            <input type="file" name="id_card" class="form-control">
+
+            <hr>
+
+            <h5>Course Fee</h5>
+            <strong>Original: Rs.</strong> <span id="originalPrice">0</span><br>
+            <strong>Discount:</strong> <span id="discountPrice">-</span><br>
+            <strong>Final Price: Rs.</strong> <span id="finalPrice">0</span>
+
+            <button class="btn btn-primary w-100 mt-3">
+                Submit & Proceed to Payment
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+    const courseSelect = document.getElementById("id_course");
+    const categorySelect = document.getElementById("id_category");
+    const instituteSelect = document.getElementById("id_institute");
+
+    const hiddenInstitute = document.getElementById("hiddenInstitute");
+    const hiddenCategory = document.getElementById("hiddenCategory");
+    const hiddenCourse = document.getElementById("hiddenCourse");
+
+    const selectedCourse = "{{ selected_course.id|default:'' }}";
+
+    if (selectedCourse) {
+        courseSelect.value = selectedCourse;
+        categorySelect.value = "{{ selected_course.category.id }}";
+        instituteSelect.value = "{{ selected_course.category.institute.id }}";
+
+        courseSelect.disabled = true;
+        categorySelect.disabled = true;
+        instituteSelect.disabled = true;
+
+        hiddenInstitute.value = "{{ selected_course.category.institute.id }}";
+        hiddenCategory.value = "{{ selected_course.category.id }}";
+        hiddenCourse.value = selectedCourse;
+
+        let original = parseFloat("{{ selected_course.original_price }}");
+        let discount = parseFloat("{{ selected_course.discount_percent }}");
+        let final = original - (original * discount / 100);
+
+        document.getElementById("originalPrice").innerText = original;
+        document.getElementById("discountPrice").innerText = discount + "%";
+        document.getElementById("finalPrice").innerText = final;
+    }
+});
+
+</script>
+
+{% endblock %}

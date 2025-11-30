@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Course Details {% endblock %}
+
+{% block content %}
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        transition: 0.3s ease;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+    .badge {
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        font-size: 0.8rem;
+    }
+
+    .btn-warning:hover, .btn-success:hover {
+        transform: scale(1.05);
+        transition: 0.2s ease;
+    }
+
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 1rem !important;
+        }
+        .d-flex.justify-content-between.gap-2.flex-wrap {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+<div class="container py-5 d-flex justify-content-center">
+
+    <!-- Compact Course Card -->
+    <div class="card shadow-lg rounded-4 overflow-hidden" style="max-width: 700px; background-color: #6b0a0a; color: #fff;">
+
+        <!-- Image with category badge -->
+        <div class="position-relative">
+            <img src="{{ course.image.url }}" class="img-fluid w-100" style="height: 250px; object-fit: cover; filter: brightness(0.75);">
+            <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 fs-7 px-2 py-1 shadow">
+                {{ course.category.title }}
+            </span>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body p-4">
+
+            <!-- Title -->
+            <h3 class="card-title mb-2 fw-bold">{{ course.title }}</h3>
+
+            <!-- Short Description -->
+            <p class="card-text mb-3" style="line-height: 1.5; font-size: 0.95rem;">
+                {{ course.description|truncatechars:150 }}
+            </p>
+
+            <!-- Pricing Section -->
+            <div class="d-flex justify-content-between mb-3 gap-2 flex-wrap">
+
+                <div class="flex-fill text-center p-2 rounded" style="background-color: rgba(255,255,255,0.1);">
+                    <small class="text-light d-block">Original</small>
+                    <span class="text-decoration-line-through text-light fw-bold">Rs {{ course.original_price }}</span>
+                </div>
+
+                <div class="flex-fill text-center p-2 rounded" style="background-color: rgba(255,255,255,0.1);">
+                    <small class="text-light d-block">Discount</small>
+                    <span class="text-warning fw-bold">{{ course.discount_percent }}%</span>
+                </div>
+
+                <div class="flex-fill text-center p-2 rounded" style="background-color: rgba(255,255,255,0.1);">
+                    <small class="text-light d-block">Final</small>
+                    <span class="text-success fw-bold">Rs {{ course.discount_price }}</span>
+                </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-3 gap-2 flex-wrap">
+                <a href="{% url 'main:edit_course' course.id %}" class="btn btn-warning btn-sm text-dark fw-bold px-3 py-1 flex-fill text-center">
+                    Edit
+                </a>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

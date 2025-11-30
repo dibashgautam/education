@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Category{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Your Course Categories</h3>
+        <a href="{% url 'main:add_category' %}" class="btn btn-primary">+ Add Category</a>
+    </div>
+
+    <div class="row">
+        {% for cat in categories %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm p-3">
+                <img src="{{ cat.image.url }}" class="card-img-top rounded" height="150">
+                <h5 class="mt-2">{{ cat.title }}</h5>
+            </div>
+        </div>
+        {% empty %}
+        <p>No categories yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

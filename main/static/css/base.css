@@ -1,0 +1,123 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    background: #6b0a0a
+}
+/* Dropdown hover */
+.nav-item:hover {
+    display: block;
+    margin-top: 0;
+}
+
+/* Navbar link style */
+.nav-link {
+    font-weight: 500;
+    font-size: 18px;
+    color: #fff;
+}
+/* Active navbar link */
+.nav-link.active {
+    color: yellow !important;
+}
+
+
+
+
+/* footer section */
+/* Main Footer BG */
+.main-footer {
+    background: #6b0a0a;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    padding-top: 60px;
+}
+
+/* Footer Logo / Address */
+.footer-address {
+    font-size: 14px;
+    color: #e8dada;
+    line-height: 1.6;
+}
+
+/* Section Titles */
+.footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+/* Footer Links */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #e8dada;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.footer-links a:hover {
+    color: #ffcc00;
+}
+
+/* Social Icons */
+.footer-social a {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #cdaaaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.footer-social a:hover {
+    background: #ffcc00;
+    color: #000;
+}
+
+/* Right Side Pill Buttons */
+.footer-pill-btn {
+    padding: 10px 30px;
+    border: 2px solid #ffffff;
+    border-radius: 40px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.footer-pill-btn:hover {
+    background: #ffcc00;
+    color: #000;
+}
+
+/* Footer bottom */
+.footer-bottom {
+    background: #5a0808;
+    font-size: 14px;
+    color: #eee;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-btn-wrapper {
+        margin-top: 20px;
+        align-items: flex-start;
+    }
+}

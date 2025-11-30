@@ -1,0 +1,66 @@
+{% comment %} CATEGORY {% endcomment %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/search_drop.css' %}">
+{% if categories or courses or institutes %}
+    {% for cat in categories %}
+    <div class="d-flex align-items-center p-2 border-bottom search-item" data-url="{% url 'main:category_list' cat.id %}">
+        <img src="{{ cat.image.url }}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
+        <div>
+            <strong>{{ cat.title }}</strong><br>
+            <small>{{ cat.institute.name }}</small>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% for course in courses %}
+    <div class="d-flex align-items-center p-2 border-bottom search-item" data-url="{% url 'main:course_detail' course.id %}">
+        <img src="{{ course.image.url }}" style="width:50px; height:50px; object-fit:cover; border-radius:6px; margin-right:10px;">
+        <div>
+            <strong>{{ course.title }}</strong><br>
+            <small>Price: ₹{{ course.discount_price }}</small><br>
+            <small>By: {{ course.institute.name }}</small>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% for inst in institutes %}
+    <div class="d-flex align-items-center p-2 border-bottom search-item" data-url="{% url 'main:institute_detail' inst.id %}">
+        {% if inst.profile_logo %}
+            <img src="{{ inst.profile_logo.url }}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
+        {% else %}
+            <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:40px; height:40px; margin-right:10px;">
+                {{ inst.name|slice:":1" }}
+            </div>
+        {% endif %}
+        <div>
+            <strong>{{ inst.name }}</strong>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="p-3 text-center text-muted">
+        No results found
+    </div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchResults = document.getElementById('search-results');
+
+    searchResults.addEventListener('click', function(e) {
+        let target = e.target;
+        while (target && !target.classList.contains('search-item')) {
+            target = target.parentElement;
+        }
+        if (target) {
+            const url = target.getAttribute('data-url');
+            if (url) {
+                window.location.href = url;
+            }
+        }
+    });
+});
+</script>
+
+
+

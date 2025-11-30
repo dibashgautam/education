@@ -1,0 +1,25 @@
+
+.d-flex.position-relative {
+    margin-top: 20px;  
+    position: relative; 
+}
+
+#search-results {
+    position: absolute;
+    top: 100%;         
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: none;     
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+#search-results div:hover {
+    background: #f8f8f8;
+    cursor: pointer;
+}
+

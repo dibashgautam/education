@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow p-4 rounded-4 mb-4" style="max-width: 900px; margin:auto;">
+        <h2 class="mb-4">Student Profile</h2>
+
+        <div class="row g-3">
+            <div class="col-md-4 text-center">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" class="img-fluid rounded-circle mb-3" style="width:150px; height:150px; object-fit:cover;">
+                {% else %}
+                    <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center mb-3" 
+                         style="width:150px; height:150px; font-size:50px;">
+                         {{ profile.full_name|slice:":1" }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <p><strong>Full Name:</strong> {{ profile.full_name }}</p>
+                <p><strong>Email:</strong> {{ request.user.email }}</p>
+                <p><strong>Phone:</strong> {{ profile.phone }}</p>
+                <p><strong>Date of Birth:</strong> {{ profile.date_of_birth }}</p>
+                <p><strong>Address:</strong> {{ profile.address }}</p>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3 text-center">My Courses</h3>
+
+    {% for admission in admissions %}
+    <div class="card shadow-sm p-3 rounded-4 mb-3">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-3">
+                {% if admission.course.image %}
+                    <img src="{{ admission.course.image.url }}" class="img-fluid rounded" alt="{{ admission.course.title }}">
+                {% else %}
+                    <img src="{% static 'images/course-placeholder.png' %}" class="img-fluid rounded" alt="No Image">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h5>{{ admission.course.title }}</h5>
+                <p><strong>Category:</strong> {{ admission.category.title }}</p>
+                <p><strong>Institute:</strong> {{ admission.institute.name }}</p>
+                <p><strong>Status:</strong> {{ admission.status|capfirst }}</p>
+            </div>
+            <div class="col-md-3 text-end">
+                {% if admission.status == "accepted" %}
+                    <a href="{% url 'main:download_offer_letter' admission.id %}" 
+                       class="btn btn-success w-100">Download Offer Letter</a>
+                {% else %}
+                    <span class="text-muted">Offer letter not available</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center">No courses enrolled yet.</p>
+    {% endfor %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ category.title }}</h2>
+    {% if category.image %}
+        <img src="{{ category.image.url }}" alt="{{ category.title }}" style="width:150px; height:150px; object-fit:cover; border-radius:8px;">
+    {% endif %}
+
+    <p><strong>Institute:</strong> {{ category.institute.name }}</p>
+    {% if category.description %}
+        <p><strong>Description:</strong> {{ category.description }}</p>
+    {% endif %}
+
+    <hr>
+    <h4>Courses in this Category</h4>
+    {% if courses %}
+        <div class="row">
+            {% for course in courses %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    {% if course.image %}
+                        <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="height:150px; object-fit:cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text">Price: ₹{{ course.discount_price }}</p>
+                        <p class="card-text"><small>By: {{ course.institute.name }}</small></p>
+                        <a href="{% url 'main:course_detail' course.id %}" class="btn btn-primary btn-sm">View Course</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No courses found in this category.</p>
+    {% endif %}
+</div>
+{% endblock %}

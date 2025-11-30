@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2>{{ institute.name }}</h2>
+
+    {% if institute.profile_logo %}
+        <img src="{{ institute.profile_logo.url }}" alt="{{ institute.name }}" style="width:100px; height:100px; object-fit:cover; border-radius:50%;">
+    {% endif %}
+
+    <p><strong>Description:</strong> {{ institute.description }}</p>
+    <p><strong>Established:</strong> {{ institute.estd }}</p>
+    <p><strong>Email:</strong> {{ institute.email }}</p>
+    <p><strong>Phone:</strong> {{ institute.phone }}</p>
+    {% if institute.website %}
+    <p><strong>Website:</strong> <a href="{{ institute.website }}" target="_blank">{{ institute.website }}</a></p>
+    {% endif %}
+    <p><strong>Address:</strong> {{ institute.address }}</p>
+    <p><strong>Register Number:</strong> {{ institute.register_number }}</p>
+
+    {% if institute.background_image %}
+        <div class="mt-3">
+            <img src="{{ institute.background_image.url }}" alt="Background" style="width:100%; max-height:300px; object-fit:cover;">
+        </div>
+    {% endif %}
+
+    {% if institute.signature %}
+        <p>Signature: <img src="{{ institute.signature.url }}" alt="Signature" style="height:50px;"></p>
+    {% endif %}
+    {% if institute.stamp %}
+        <p>Stamp: <img src="{{ institute.stamp.url }}" alt="Stamp" style="height:50px;"></p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

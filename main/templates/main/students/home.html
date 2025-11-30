@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+
+    <!-- Dark Overlay -->
+    <div class="overlay"></div>
+
+    <div class="container text-center hero-content">
+        <p class="welcome-text">Welcome To University</p>
+
+        <h1 class="hero-title">Education University Your<br>Pathway To Success</h1>
+
+        <!-- Students Image Row -->
+        <div class="students-group">
+            <img src="{% static 'images/hero_img01.png' %}" alt="students">
+        </div>
+
+       <!-- Buttons -->
+        <div class="hero-buttons-wrapper d-flex justify-content-center gap-3 mt-4">
+            <a href="{% url 'main:course' %}" class="btn hero-btn">
+                <i class="fa-solid fa-book-open me-2"></i> 
+                Explore Programs
+            </a>
+
+            <a href="{% url 'main:admission_form' %}" class="btn hero-btn">
+                <i class="fa-solid fa-graduation-cap me-2"></i>
+                Apply Now
+            </a>
+
+            <a href="#" class="btn hero-btn">
+                <i class="fa-solid fa-comments me-2"></i>
+                Talk With A Teacher
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- TOP PROGRAMS SECTION -->
+<section class="top-programs py-5">
+    <div class="container">
+
+        <!-- Subtitle -->
+        <p class="section-subtitle">Our Academics Offerings</p>
+
+        <!-- Title -->
+        <h2 class="section-title">Top Programs</h2>
+
+        <!-- View All Button -->
+        <div class="text-end mb-4">
+            <a href="{% url 'main:course' %}" class="view-all-btn">
+                VIEW ALL PROGRAMS <i class="bi bi-book"></i>
+            </a>
+        </div>
+
+        <!-- Program Cards -->
+        <div class="row g-4">            
+
+            <!-- PROGRAM CARDS -->
+            <div class="row g-4">
+
+                {% for c in courses|slice:":3" %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="program-card shadow-sm rounded-4 overflow-hidden">
+
+                        <!-- Course Image -->
+                        {% if c.image %}
+                        <img src="{{ c.image.url }}" class="program-img" alt="{{ c.title }}">
+                        {% else %}
+                        <img src="{% static 'images/course-placeholder.png' %}" class="program-img" alt="No Image">
+                        {% endif %}
+
+                        <!-- Category -->
+                        <p class="category"># {{ c.category.title }}</p>
+
+                        <!-- Title -->
+                        <h4 class="program-title">{{ c.title }}</h4>
+
+                        <!-- Institute Info -->
+                        <div class="d-flex align-items-center mb-2">
+
+                            {% if c.category.institute.profile_logo %}
+                            <img src="{{ c.category.institute.profile_logo.url }}" 
+                                style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
+                            {% else %}
+                            <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center" 
+                                style="width:40px; height:40px; margin-right:10px;">
+                                {{ c.category.institute.name|slice:":1" }}
+                            </div>
+                            {% endif %}
+
+                            <strong>{{ c.category.institute.name }}</strong>
+                        </div>
+
+                        <!-- PRICE INFO -->
+                        <div class="price-info mt-3 d-flex justify-content-between text-center">
+
+                            <!-- Original Price -->
+                            <div class="price-box">
+                                <strong>Original Price</strong><br>
+                                <span class="text-muted" style="text-decoration: line-through;">
+                                   Rs. {{ c.original_price|floatformat:2 }}
+                                </span>
+                            </div>
+
+                            <!-- Discount -->
+                            <div class="price-box">
+                                <strong>Discount</strong><br>
+                                <span class="text-success">
+                                    {% if c.discount_percent %}
+                                        {{ c.discount_percent }}%
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <!-- Final Price -->
+                            <div class="price-box">
+                                <strong>Final Price</strong><br>
+                                <span class="fw-bold">
+                                    Rs. {{ c.final_price|floatformat:2 }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- ENROLL BUTTON -->
+                        <a href="{% url 'main:course_detail' c.id %}" class="program-btn mt-3">ENROLL NOW</a>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+<!-- top category -->
+<section class="top-department-section py-5">
+  <div class="container text-center">
+
+    <p class="td-subtitle">Our Academics Offerings</p>
+    <h2 class="td-title">Our Top Department</h2>
+
+    <div class="row mt-5 gx-0 gy-4">
+
+      {% for cat in categories %}
+      <div class="col-md-3 dept-box">
+        <div class="dept-content">
+
+          <!-- Category Image -->
+        <div class="dept-icon mb-2">
+            {% if cat.image %}
+              <img src="{{ cat.image.url }}" alt="{{ cat.title }}">
+            {% else %}
+              <img src="{% static 'images/default-category.png' %}" alt="{{ cat.title }}">
+            {% endif %}
+        </div>
+
+          <!-- Category Name -->
+          <h4>{{ cat.title }}</h4>
+
+          <!-- Course Count -->
+          <p>Course: {{ cat.courses.count }}</p>
+
+          <!-- Institute Logo + Name -->
+          <div class="d-flex align-items-center justify-content-center mt-2">
+
+            {% if cat.institute.profile_logo %}
+              <img src="{{ cat.institute.profile_logo.url }}"
+                   style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-right:8px;">
+            {% else %}
+              <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center"
+                   style="width:35px; height:35px; margin-right:8px;">
+                   {{ cat.institute.name|slice:":1" }}
+              </div>
+            {% endif %}
+
+            <strong>{{ cat.institute.name }}</strong>
+
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+
+
+ <!-- top category end  -->
+
+<section class="testimonial-section py-5">
+  <div class="container">
+        <div class="row align-items-center">
+
+        <!-- LEFT SIDE IMAGE + BUTTONS -->
+        <div class="col-md-5 text-center position-relative">
+            <button class="arrow-btn up-btn" onclick="prevFeedback()">
+            <i class="bi bi-chevron-up"></i>
+            </button>
+
+            <div class="main-student-img-wrapper">
+                <img id="main-feedback-img" class="img-fluid main-student-img"
+                    src="{% if feedbacks %}{{ feedbacks.0.student_image.url }}{% else %}{% static 'images/tesimg04.png' %}{% endif %}"
+                    alt="{% if feedbacks %}{{ feedbacks.0.student_name }}{% endif %}">
+            </div>
+
+            <button class="arrow-btn down-btn" onclick="nextFeedback()">
+            <i class="bi bi-chevron-down"></i>
+            </button>
+        </div>
+
+        <!-- RIGHT SIDE TEXT -->
+        <div class="col-md-7">
+            <p class="sub-title">Our Student Stories</p>
+            <h2 class="main-title">Happy Student Feedback</h2>
+            <div class="quote-icon">“”</div>
+
+            <p class="feedback-text" id="feedback-text">
+                {% if feedbacks %}{{ feedbacks.0.feedback_text }}{% else %}No feedback available yet.{% endif %}
+            </p>
+            <h5 class="student-name" id="student-name">
+                {% if feedbacks %}{{ feedbacks.0.student_name }}{% endif %}
+            </h5>
+            
+        </div>
+        </div>
+
+        <!-- FEEDBACK FORM BELOW -->
+        <div class="row mt-5">
+            <div class="col-md-8 offset-md-2" 
+                style="background:#fff; border-radius:1rem; padding:2rem; box-shadow:0 15px 30px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.2s;">
+                
+                <h3 style="text-align:center; font-weight:700; color:#2d0e0e; margin-bottom:1rem;">Leave Your Feedback</h3>
+                
+                <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div style="margin-bottom:1rem;">
+                    {{ form.feedback_text.label_tag }}
+                    {{ form.feedback_text}}
+                </div>
+
+                <button type="submit" 
+                        style="width:100%; padding:12px; font-weight:600; border-radius:0.75rem; background-color:#2d0e0e; color:#fff; transition: background 0.3s, transform 0.2s;"
+                        onmouseover="this.style.backgroundColor='#ffc107'; this.style.color='#000';"
+                        onmouseout="this.style.backgroundColor='#2d0e0e'; this.style.color='#fff';">
+                    Submit
+                </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+
+
+<!-- add collage section -->
+ <section class="apply-section">
+    <div class="apply-container">
+
+        <!-- Left Side Text -->
+        <div class="apply-text">
+            <h2>Start Your Journey</h2>
+            <p class="sub-text">Add your institute, college, university, or school and begin your admission process with us.</p>
+
+            <a href="{% url 'main:apply_institute' %}"><button class="apply-btn">Apply Now</button></a>
+        </div>
+
+        <!-- Right Side Image -->
+        <div class="apply-image">
+            <img src="{% static 'images/collage.webp' %}" alt="Apply Now Image">
+        </div>
+
+    </div>
+</section>
+
+
+
+{% if messages %}
+
+    {% for message in messages %}
+    <script>
+        alertify.set('notifier','position', 'top-right');
+        alertify.success("{{message}}");
+    </script>
+        
+    {% endfor %}
+{% endif %}
+
+
+
+<script type="text/javascript">
+let feedbacks = {{ feedbacks_json | safe }};
+let currentIndex = 0;
+
+function showFeedback(index) {
+    if(feedbacks.length === 0) return;
+    const fb = feedbacks[index];
+    document.getElementById('main-feedback-img').src = fb.image;
+    document.getElementById('main-feedback-img').alt = fb.name;
+    document.getElementById('feedback-text').innerText = fb.text;
+    document.getElementById('student-name').innerText = fb.name;
+    document.getElementById('student-role').innerText = fb.role;
+}
+
+// Initial display
+showFeedback(currentIndex);
+
+// Next / Previous buttons
+function nextFeedback() {
+    if(feedbacks.length === 0) return;
+    currentIndex = (currentIndex + 1) % feedbacks.length;
+    showFeedback(currentIndex);
+}
+
+function prevFeedback() {
+    if(feedbacks.length === 0) return;
+    currentIndex = (currentIndex - 1 + feedbacks.length) % feedbacks.length;
+    showFeedback(currentIndex);
+}
+
+</script>
+
+
+
+
+{% endblock %}

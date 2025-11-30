@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Add Course{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="course-container">
+    <div class="course-card">
+        <h2 class="title">Add New Course</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="django-form">
+                <div class="mb-3">
+                    <label for="id_category" class="form-label">Category</label>
+                    <select name="category" id="id_category" class="form-control" required>
+                        <option value="">Select Category</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if selected_category_id == cat.id %}selected{% endif %}>
+                                {{ cat.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {{ form.title|as_crispy_field }}
+                {{ form.description|as_crispy_field }}
+                {{ form.image|as_crispy_field }}
+                {{ form.duration|as_crispy_field }}
+                {{ form.level|as_crispy_field }}
+                {{ form.class_type|as_crispy_field }}
+                {{ form.seats|as_crispy_field }}
+                {{ form.original_price|as_crispy_field }}
+                {{ form.discount_percent|as_crispy_field }}
+            </div>
+
+            <button type="submit" class="btn-submit">Add Course</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

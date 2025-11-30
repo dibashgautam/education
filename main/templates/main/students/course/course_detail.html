@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main/students/course/course_details.css' %}">
+<div class="container my-5">
+
+    <div class="card shadow-lg rounded-4 p-4">
+        <div class="row g-4">
+            <!-- Course Image -->
+            {% if course.image %}
+            <div class="col-md-5 d-flex align-items-center justify-content-center">
+                <img src="{{ course.image.url }}" class="img-fluid rounded" alt="{{ course.title }}">
+            </div>
+            {% endif %}
+
+            <!-- Course Info -->
+            <div class="{% if course.image %}col-md-7{% else %}col-12{% endif %}">
+                <h1 class="fw-bold">{{ course.title }}</h1>
+                <p class="text-muted mb-2"><strong>Category:</strong> {{ course.category.title }}</p>
+
+                <!-- Additional Info -->
+                <ul class="list-unstyled mb-3">
+                    <li><strong>Duration:</strong> {{ course.duration }}</li>
+                    <li><strong>Seats:</strong> {{ course.seats }}</li>
+                    <li><strong>Level:</strong> {{ course.level }}</li>
+                    <li><strong>Class Type:</strong> {{ course.class_type }}</li>
+                </ul>
+
+                <p class="mt-3">{{ course.description|linebreaks }}</p>
+
+                <!-- Price Section -->
+                <div class="mt-4 p-3 border rounded bg-light">
+                    <h5>Price Details</h5>
+                    <hr>
+                    <p>
+                        <strong>Original Price:</strong> 
+                        <span class="text-decoration-line-through text-danger">
+                            Rs {{ course.original_price|floatformat:2 }}
+                        </span>
+                    </p>
+                    <p>
+                        <strong>Discount:</strong> 
+                        {% if course.discount_percent %}
+                            <span class="text-success">{{ course.discount_percent }}%</span>
+                        {% else %}
+                            <span>-</span>
+                        {% endif %}
+                    </p>
+                    <p class="fs-5">
+                        <strong>Final Price:</strong> Rs {{ final_price|floatformat:2 }}
+                    </p>
+                </div>
+
+                <!-- Apply Now Button -->
+                <div class="mt-4">
+                    <a href="{% url 'main:admission_form' %}?course_id={{ course.id }}" class="btn btn-primary btn-lg w-100 enroll-btn">
+                        Apply Now
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

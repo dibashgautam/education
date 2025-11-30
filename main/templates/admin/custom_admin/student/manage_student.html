@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Manage Student{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <h3 class="mb-3">Manage Student: {{ student.student_name }}</h3>
+
+    <div class="card p-3 mb-4">
+        <h5>Student Information</h5>
+        <p><strong>Name:</strong> {{ student.student_name }}</p>
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Phone:</strong> {{ student.phone }}</p>
+        <p><strong>Address:</strong> {{ student.address }}</p>
+        <p><strong>Date of Birth:</strong> {{ student.dob }}</p>
+        <p><strong>Gender:</strong> {{ student.gender }}</p>
+        <p><strong>Institute:</strong> {{ student.institute.name }}</p>
+        <p><strong>Category:</strong> {{ student.category.title }}</p>
+        <p><strong>Course:</strong> {{ student.course.title }}</p>
+        <p><strong>Status:</strong> {{ student.status|capfirst }}</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="action" value="shortlist" class="btn btn-warning">Shortlist</button>
+        <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+    </form>
+
+    <hr>
+    <h5>Uploaded Documents</h5>
+
+    {% if student.documents.all.count %}
+        <div class="row gy-3">
+            {% for doc in student.documents.all %}
+                <div class="col-auto">
+                    <div class="d-flex flex-column align-items-center">
+
+                        <strong class="mb-1 text-center">{{ doc.doc_type }}</strong>
+
+                        {% with doc.file.url|lower as f %}
+                            {% if ".jpg" in f or ".jpeg" in f or ".png" in f or ".webp" in f %}
+                                <img src="{{ doc.file.url }}"
+                                     class="doc-thumb rounded"
+                                     data-full="{{ doc.file.url }}"
+                                     alt="{{ doc.doc_type }}"
+                                     style="width:120px; height:120px; object-fit:cover; cursor:pointer; border:1px solid #e2e6ea;">
+                                <small class="text-muted mt-1">Image</small>
+
+                            {% else %}
+                                <a href="{{ doc.file.url }}" target="_blank" class="btn btn-sm btn-secondary">
+                                    View File
+                                </a>
+                                <small class="text-muted mt-1">File</small>
+                            {% endif %}
+                        {% endwith %}
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No documents uploaded yet.</p>
+    {% endif %}
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-body text-center">
+        <img id="modalPreviewImage" class="img-fluid rounded" style="max-height:80vh;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modalEl = document.getElementById('imagePreviewModal');
+    const modalImage = document.getElementById('modalPreviewImage');
+    const modal = new bootstrap.Modal(modalEl);
+
+    document.querySelectorAll('.doc-thumb').forEach(img => {
+        img.addEventListener('click', () => {
+            modalImage.src = img.dataset.full;
+            modal.show();
+        });
+    });
+});
+</script>
+
+{% endblock %}

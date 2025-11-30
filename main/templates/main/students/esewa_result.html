@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5 text-center">
+    {% if status == "success" %}
+        <div class="alert alert-success">Payment successful! Admission ID: {{ admission.id }}</div>
+        <a href="{% url 'main:home' %}" class="btn btn-primary">Back to Home</a>
+    {% elif status == "failed" %}
+        <div class="alert alert-danger">Payment verification failed. Response: {{ response|default:"-" }}</div>
+        <a href="{% url 'main:admission_form' %}" class="btn btn-secondary">Try Again</a>
+    {% elif status == "cancelled" %}
+        <div class="alert alert-warning">Payment cancelled or failed.</div>
+        <a href="{% url 'main:admission_form' %}" class="btn btn-secondary">Back to Form</a>
+    {% else %}
+        <div class="alert alert-info">Status: {{ status }} Message: {{ message }}</div>
+    {% endif %}
+</div>
+{% endblock %}

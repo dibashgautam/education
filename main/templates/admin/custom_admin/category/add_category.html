@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Add Category{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/admin/add_category.css' %}">
+
+<div class="category-container">
+    <div class="category-card">
+        <h2 class="title">Add New Category</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="django-form">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit" class="btn-submit">Add Category</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

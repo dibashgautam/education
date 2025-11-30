@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Offer Letter - {{ institute.name }}</title>
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="institute-info">
+                <h1 class="institute-name">{{ institute.name }}</h1>
+                <div class="institute-details">
+                    {% if institute.address %}{{ institute.address }} • {% endif %}
+                    {% if institute.phone %}Tel: {{ institute.phone }} • {% endif %}
+                    {% if institute.email %}{{ institute.email }}{% endif %}
+                </div>
+            </div>
+            
+            {% if logo_base64 %}
+            <img src="data:image/png;base64,{{ logo_base64 }}" class="logo" alt="Logo">
+            {% else %}
+            <div class="stamp-placeholder">Institute Logo</div>
+            {% endif %}
+        </div>
+
+        <!-- Date -->
+        <div class="letter-date">
+            <strong>Date:</strong> {{ admission.created_at|date:"F d, Y" }}
+        </div>
+
+        <!-- Student Information -->
+        <div class="student-info">
+            <strong>To:</strong> {{ student_name }}<br>
+            {% if admission.address %}<strong>Address:</strong> {{ admission.address }}{% endif %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-section">
+            <div class="salutation">
+                <strong>Subject: Offer of Admission</strong>
+            </div>
+
+            <div class="salutation">
+                Dear <strong>{{ student_name }}</strong>,
+            </div>
+
+            <div class="paragraph">
+                We are pleased to offer you admission to the following program at {{ institute.name }}. This offer is based on your application and qualifications.
+            </div>
+
+            <!-- Course Details Table -->
+            <table class="course-table">
+                <tr>
+                    <td class="label">Program Name</td>
+                    <td>{{ course.title }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Duration</td>
+                    <td>{{ course.duration }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Level</td>
+                    <td>{{ course.level }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Class Type</td>
+                    <td>{{ course.class_type|title }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Admission ID</td>
+                    <td>{{ admission.id }}</td>
+                </tr>
+            </table>
+
+            <div class="paragraph">
+                To secure your admission, please complete the enrollment formalities by the specified deadline. Submit all required documents and complete the payment process.
+            </div>
+
+            <div class="paragraph">
+                We believe this program will provide you with excellent learning opportunities and look forward to welcoming you to our institute.
+            </div>
+
+            <div class="paragraph">
+                Congratulations on your achievement! We await your positive response.
+            </div>
+        </div>
+
+        <!-- Footer with Signatures -->
+        <div class="footer">
+           <div class="signature-area">
+        <!-- Signature -->
+        <div class="signature-box">
+            {% if signature_base64 %}
+            <img src="data:image/png;base64,{{ signature_base64 }}" class="signature-image" alt="Signature">
+            {% else %}
+            <div class="signature-line"></div>
+            {% endif %}
+            <div class="signature-text">
+                Authorized Signature<br>Admission Committee
+            </div>
+        </div>
+
+        <!-- Stamp -->
+        <div class="signature-box">
+            {% if stamp_base64 %}
+            <img src="data:image/png;base64,{{ stamp_base64 }}" class="stamp-image" alt="Stamp">
+            {% else %}
+            <div class="stamp-placeholder">Official Stamp</div>
+            {% endif %}
+            <div class="signature-text">
+                Official Stamp
+            </div>
+        </div>
+
+        <!-- Student Photo -->
+        <div class="signature-box">
+            {% if student_photo_base64 %}
+            <img src="data:image/png;base64,{{ student_photo_base64 }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #2c5aa0;" alt="Student Photo">
+            {% else %}
+            <div class="stamp-placeholder">Student Photo</div>
+            {% endif %}
+            <div class="signature-text">
+                Student Photo
+            </div>
+        </div>
+
+        <!-- QR Code -->
+        <div class="signature-box">
+            {% if qr_base64 %}
+            <img src="data:image/png;base64,{{ qr_base64 }}" class="qr-code" alt="QR Code">
+            {% else %}
+            <div class="stamp-placeholder">QR Code</div>
+            {% endif %}
+            <div class="signature-text">
+                Scan to Verify<br>Admission ID: {{ admission.id }}
+            </div>
+        </div>
+    </div>
+
+        </div>
+
+        </div>
+
+        <!-- Contact Footer -->
+        <div class="contact-footer">
+            {{ institute.name }} • 
+            {% if institute.address %}{{ institute.address }} • {% endif %}
+            {% if institute.phone %}{{ institute.phone }} • {% endif %}
+            {% if institute.email %}{{ institute.email }}{% endif %}
+        </div>
+    </div>
+</body>
+</html>
