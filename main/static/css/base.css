@@ -1,32 +1,78 @@
+/* ======================== Base Styles ======================== */
+html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Inter', sans-serif;
 }
 
+/* ======================== Navbar Styles ======================== */
 .navbar {
-    background: #6b0a0a
-}
-/* Dropdown hover */
-.nav-item:hover {
-    display: block;
-    margin-top: 0;
+    background: #6b0a0a !important;
 }
 
-/* Navbar link style */
-.nav-link {
-    font-weight: 500;
-    font-size: 18px;
-    color: #fff;
+.navbar-brand .fs-4 {
+    font-size: 1.5rem !important;
 }
-/* Active navbar link */
+
+.nav-link {
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 500;
+}
+
 .nav-link.active {
     color: yellow !important;
+    border-bottom: 2px solid yellow;
 }
 
+.nav-link:hover {
+    color: #ffcc00 !important;
+}
 
+.bi-person.fs-3 {
+    color: #fff !important;
+}
 
+.navbar input[type="search"] {
+    border-radius: 0.5rem;
+    border: none;
+    padding-right: 3.5rem;
+}
 
-/* footer section */
-/* Main Footer BG */
+.navbar .btn-outline-warning {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    color: #fff;
+    border-color: yellow;
+    background-color: transparent;
+}
+
+.search-container {
+    position: relative;
+}
+
+#search-results {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* ======================== Footer Styles ======================== */
 .main-footer {
     background: #6b0a0a;
     color: #fff;
@@ -34,14 +80,12 @@ body {
     padding-top: 60px;
 }
 
-/* Footer Logo / Address */
 .footer-address {
     font-size: 14px;
     color: #e8dada;
     line-height: 1.6;
 }
 
-/* Section Titles */
 .footer-title {
     font-family: 'Playfair Display', serif;
     font-size: 20px;
@@ -50,7 +94,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Footer Links */
 .footer-links {
     list-style: none;
     padding: 0;
@@ -65,14 +108,14 @@ body {
     color: #e8dada;
     text-decoration: none;
     font-size: 15px;
+    transition: 0.2s;
 }
 
 .footer-links a:hover {
     color: #ffcc00;
 }
 
-/* Social Icons */
-.footer-social a {
+.main-footer .d-flex.gap-2 a i {
     width: 35px;
     height: 35px;
     border: 1px solid #cdaaaa;
@@ -85,12 +128,12 @@ body {
     transition: 0.3s;
 }
 
-.footer-social a:hover {
+.main-footer .d-flex.gap-2 a:hover i {
     background: #ffcc00;
     color: #000;
+    border-color: #ffcc00;
 }
 
-/* Right Side Pill Buttons */
 .footer-pill-btn {
     padding: 10px 30px;
     border: 2px solid #ffffff;
@@ -107,17 +150,97 @@ body {
     color: #000;
 }
 
-/* Footer bottom */
-.footer-bottom {
+.text-center.py-3.text-white {
     background: #5a0808;
     font-size: 14px;
-    color: #eee;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .footer-btn-wrapper {
-        margin-top: 20px;
-        align-items: flex-start;
+/* ======================== Responsive Adjustments ======================== */
+
+/* ------------------ Tablet (max 991.98px) ------------------ */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        margin: 0 !important;
+    }
+
+    .nav-link {
+        font-size: 16px;
+        padding: 0.5rem !important;
+    }
+
+    .nav-link.active {
+        border-bottom: none;
+        background-color: rgba(255, 255, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    .footer-pill-btn {
+        width: 80%;
+        max-width: 180px;
+        margin: auto;
+    }
+
+    .main-footer .row > div {
+        margin-bottom: 30px;
+    }
+}
+
+/* ------------------ Mobile (max 767.98px) ------------------ */
+@media (max-width: 767.98px) {
+    .navbar-brand img {
+        height: 40px;
+    }
+
+    .navbar-brand .fs-4 {
+        font-size: 1.2rem !important;
+    }
+
+    .navbar-nav {
+        width: 100%;
+    }
+
+    .nav-item {
+        margin-bottom: 5px;
+    }
+
+    .nav-link {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .navbar-collapse .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 10px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+
+    .navbar-collapse form {
+        width: 100%;
+    }
+
+    .dropdown {
+        margin-left: 1rem;
+    }
+
+    .main-footer {
+        text-align: center;
+    }
+
+    .main-footer img {
+        margin: auto;
+    }
+
+    .main-footer .d-flex.gap-2 {
+        justify-content: center;
+    }
+
+    .footer-pill-btn {
+        width: 100%;
+    }
+
+    .text-center.py-3.text-white {
+        font-size: 13px;
+        padding: 12px;
     }
 }

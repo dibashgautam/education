@@ -1,41 +1,96 @@
 {% extends 'base.html' %}
-{% block title %}Add Course{% endblock %}
-
 {% load static %}
 
+{% block title %}Add Course{% endblock %}
+
 {% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/add_course.css' %}">
+
 <div class="course-container">
     <div class="course-card">
+
         <h2 class="title">Add New Course</h2>
 
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'main:add_course' %}">
             {% csrf_token %}
-            <div class="django-form">
-                <div class="mb-3">
-                    <label for="id_category" class="form-label">Category</label>
-                    <select name="category" id="id_category" class="form-control" required>
-                        <option value="">Select Category</option>
-                        {% for cat in categories %}
-                            <option value="{{ cat.id }}" {% if selected_category_id == cat.id %}selected{% endif %}>
-                                {{ cat.title }}
-                            </option>
-                        {% endfor %}
-                    </select>
+
+            <div class="form-grid">
+
+                <!-- LEFT -->
+                <div class="section">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category" class="form-select" required>
+                            <option value="">Select Category</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if selected_category_id == cat.id %}selected{% endif %}>
+                                    {{ cat.title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        {{ form.duration }}
+                    </div>
+                    <div class="form-group">
+                        <label>Level</label>
+                        {{ form.level }}
+                    </div>
                 </div>
 
-                {{ form.title|as_crispy_field }}
-                {{ form.description|as_crispy_field }}
-                {{ form.image|as_crispy_field }}
-                {{ form.duration|as_crispy_field }}
-                {{ form.level|as_crispy_field }}
-                {{ form.class_type|as_crispy_field }}
-                {{ form.seats|as_crispy_field }}
-                {{ form.original_price|as_crispy_field }}
-                {{ form.discount_percent|as_crispy_field }}
+                <!-- CENTER -->
+                <div class="section">
+                    <div class="form-group">
+                        <label>Class Type</label>
+                        {{ form.class_type }}
+                    </div>
+                    <div class="form-group">
+                        <label>Seats</label>
+                        {{ form.seats }}
+                    </div>
+                    <div class="form-group">
+                        <label>Original Price</label>
+                        {{ form.original_price }}
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="section">
+                    <div class="form-group">
+                        <label>Discount Percent</label>
+                        {{ form.discount_percent }}
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="form-group">
+                        <label>Image</label>
+                        {{ form.image }}
+                    </div>
+                </div>
+
             </div>
 
-            <button type="submit" class="btn-submit">Add Course</button>
+            <button type="submit" class="btn btn-success mt-3">Add Course</button>
         </form>
+
     </div>
 </div>
+
+{% if messages %}
+  {% for message in messages %}
+    <script>
+      alertify.set('notifier','position','top-right');
+      alertify.success("{{ message }}");
+    </script>
+  {% endfor %}
+{% endif %}
+
 {% endblock %}

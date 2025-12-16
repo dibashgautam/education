@@ -1,17 +1,125 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="container py-5 text-center">
-    {% if status == "success" %}
-        <div class="alert alert-success">Payment successful! Admission ID: {{ admission.id }}</div>
-        <a href="{% url 'main:home' %}" class="btn btn-primary">Back to Home</a>
-    {% elif status == "failed" %}
-        <div class="alert alert-danger">Payment verification failed. Response: {{ response|default:"-" }}</div>
-        <a href="{% url 'main:admission_form' %}" class="btn btn-secondary">Try Again</a>
-    {% elif status == "cancelled" %}
-        <div class="alert alert-warning">Payment cancelled or failed.</div>
-        <a href="{% url 'main:admission_form' %}" class="btn btn-secondary">Back to Form</a>
-    {% else %}
-        <div class="alert alert-info">Status: {{ status }} Message: {{ message }}</div>
-    {% endif %}
+<style>
+    .result-wrapper {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .result-card {
+        max-width: 520px;
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
+        padding: 40px 30px;
+        text-align: center;
+        background: #ffffff;
+    }
+
+    .result-icon {
+        font-size: 70px;
+        margin-bottom: 15px;
+    }
+
+    .success-icon {
+        color: #28a745;
+    }
+
+    .error-icon {
+        color: #dc3545;
+    }
+
+    .warning-icon {
+        color: #ffc107;
+    }
+
+    .result-title {
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .result-text {
+        color: #6c757d;
+        margin-bottom: 25px;
+    }
+
+    .info-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+
+    .info-box strong {
+        color: #212529;
+    }
+
+    .btn-lg {
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container result-wrapper">
+    <div class="result-card">
+
+        {% if status == "success" %}
+            <div class="result-icon success-icon">✔</div>
+            <h3 class="result-title text-success">Payment Successful</h3>
+            <p class="result-text">
+                Your payment has been completed successfully.
+            </p>
+
+            <div class="info-box">
+                <p><strong>Admission ID:</strong> {{ admission.id }}</p>
+                <p><strong>Course:</strong> {{ admission.course.title }}</p>
+                <p><strong>Amount Paid:</strong> Rs. {{ admission.amount }}</p>
+            </div>
+
+            <a href="{% url 'main:home' %}" class="btn btn-success btn-lg">
+                Back to Home
+            </a>
+
+        {% elif status == "failed" %}
+            <div class="result-icon error-icon">✖</div>
+            <h3 class="result-title text-danger">Payment Failed</h3>
+            <p class="result-text">
+                We could not verify your payment.
+            </p>
+
+            <div class="info-box">
+                <p><strong>Reason:</strong> {{ response|default:"Unknown error" }}</p>
+            </div>
+
+            <a href="{% url 'main:admission_form' %}" class="btn btn-danger btn-lg">
+                Try Again
+            </a>
+
+        {% elif status == "cancelled" %}
+            <div class="result-icon warning-icon">⚠</div>
+            <h3 class="result-title text-warning">Payment Cancelled</h3>
+            <p class="result-text">
+                You cancelled the payment process.
+            </p>
+
+            <a href="{% url 'main:admission_form' %}" class="btn btn-warning btn-lg">
+                Back to Admission Form
+            </a>
+
+        {% else %}
+            <div class="result-icon">ℹ</div>
+            <h3 class="result-title">Payment Status</h3>
+            <p class="result-text">
+                {{ message }}
+            </p>
+        {% endif %}
+
+    </div>
 </div>
 {% endblock %}

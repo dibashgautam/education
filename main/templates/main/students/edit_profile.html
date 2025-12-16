@@ -11,7 +11,7 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
+        <div class="col-">
             <div class="auth-card animate__animated animate__fadeIn">
 
                 <h3 class="fw-bold mb-3 text-center form-label ">Edit Profile ✨</h3>
@@ -19,67 +19,70 @@
 
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <!-- Avatar Upload -->
+
+                    <!-- AVATAR TOP CENTER -->
                     <div class="text-center mb-4">
                         <label class="avatar-upload" for="id_avatar">
-                           <div class="avatar-preview" id="avatarPreview">
-                                <img id="avatarImg"
-                                    src="{% if profile_form.instance.avatar %}{{ profile_form.instance.avatar.url }}{% else %}/static/default/avatar.png{% endif %}">
-                            </div>
-
-                            <span class="upload-icon"><i class="bi bi-camera"></i></span>
+                        <div class="avatar-preview" id="avatarPreview">
+                            <img id="avatarImg"
+                            src="{% if profile_form.instance.avatar %}
+                                    {{ profile_form.instance.avatar.url }}
+                                {% else %}
+                                    /static/default/avatar.png
+                                {% endif %}">
+                        </div>
+                        <span class="upload-icon"><i class="bi bi-camera"></i></span>
                         </label>
-                        <input type="file" name="avatar" id="id_avatar" accept="image/*" style="display:none;">
+                        <input type="file" name="avatar" id="id_avatar" hidden>
                     </div>
 
+                    <!-- FORM GRID -->
+                    <div class="profile-grid">
 
-                    <!-- Full Name -->
-                    <div class="mb-3">
-                        <label class="form-label">Full Name</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <!-- LEFT -->
+                        <div>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
                             {{ profile_form.full_name }}
                         </div>
-                    </div>
 
-                    <!-- Username -->
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
                             {{ user_form.username }}
                         </div>
-                    </div>
 
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            {{ profile_form.date_of_birth }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
                             {{ user_form.email }}
                         </div>
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div>
+                        
+
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            {{ profile_form.phone }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            {{ profile_form.address }}
+                        </div>
+                        </div>
+
                     </div>
 
-                    <!-- Date of Birth -->
-                    <div class="mb-3">
-                        <label class="form-label">Date of Birth</label>
-                        {{ profile_form.date_of_birth }}
-                    </div>
-
-                    <!-- Phone -->
-                    <div class="mb-3">
-                        <label class="form-label">Phone</label>
-                        {{ profile_form.phone }}
-                    </div>
-
-                    <!-- Address -->
-                    <div class="mb-3">
-                        <label class="form-label">Address</label>
-                        {{ profile_form.address }}
-                    </div>
-
-                    <button class="btn btn-warning btn-outline-success w-100 py-2 fw-bold mt-2">Update Profile</button>
+                    <button class="btn btn-warning w-100 mt-4 fw-bold">
+                        Update Profile
+                    </button>
                 </form>
+
 
             </div>
             

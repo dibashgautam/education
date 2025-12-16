@@ -8,12 +8,10 @@ from .models import (
 # -----------------------------
 # 1) User & Profile Forms
 # -----------------------------
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(), required=False)
-    
+class UserForm(forms.ModelForm):    
     class Meta:
         model = User
-        fields = ["username", "email", "first_name", "last_name", "password"]
+        fields = ["username", "email", "first_name", "last_name"]
 
 
 class ProfileForm(forms.ModelForm):
@@ -59,13 +57,36 @@ class CourseCategoryForm(forms.ModelForm):
 
 
 class CourseForm(forms.ModelForm):
+    LEVEL_CHOICES = [
+        ('Beginner', 'Beginner'),
+        ('Intermediate', 'Intermediate'),
+        ('Advanced', 'Advanced'),
+    ]
+
+    CLASS_TYPE_CHOICES = [
+        ('online', 'Online'),
+        ('offline', 'Offline'),
+        ('both', 'Online + Offline'),
+    ]
+
+    level = forms.ChoiceField(choices=LEVEL_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    class_type = forms.ChoiceField(choices=CLASS_TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
     class Meta:
         model = Course
         fields = [
-            "title", "description", "image", "category", "duration",
+            "title", "description", "image", "duration",
             "level", "class_type", "seats", "original_price", "discount_percent"
         ]
-
+        widgets = {
+            'title': forms.TextInput(attrs={'class':'form-control','placeholder': 'Enter course title'}),
+            'description': forms.Textarea(attrs={'class':'form-control','placeholder': 'Write course description...'}),
+            'image': forms.ClearableFileInput(attrs={'class':'form-control'}),
+            'duration': forms.TextInput(attrs={'class':'form-control','placeholder': 'e.g., 3 months'}),
+            'seats': forms.NumberInput(attrs={'class':'form-control','placeholder': 'Number of seats'}),
+            'original_price': forms.NumberInput(attrs={'class':'form-control','placeholder': 'Original price'}),
+            'discount_percent': forms.NumberInput(attrs={'class':'form-control','placeholder': 'Discount %'}),
+        }
 
 # -----------------------------
 # 3) Admission Form

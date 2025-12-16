@@ -1,25 +1,26 @@
 
-/* Card */
+/* Card Container */
 .card {
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    padding: 40px;
     transition: all 0.3s ease;
+    border: none;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px); 
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
 }
 
 /* Form Elements */
 form label {
     font-weight: 600;
     display: block;
-    margin-top: 20px;
-    margin-bottom: 8px;
+    margin-top: 15px; 
+    margin-bottom: 5px;
     color: #333;
+    font-size: 15px;
 }
 
 form input[type="text"],
@@ -27,7 +28,9 @@ form input[type="email"],
 form input[type="tel"],
 form input[type="date"],
 form select,
-form input[type="file"] {
+form input[type="file"],
+.form-control, 
+.form-select {
     width: 100%;
     padding: 10px 15px;
     border-radius: 8px;
@@ -35,44 +38,71 @@ form input[type="file"] {
     outline: none;
     transition: 0.3s;
     font-size: 15px;
+    background-color: #fcfcfc;
 }
 
 form input:focus,
-form select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+form select:focus,
+.form-control:focus, 
+.form-select:focus {
+    border-color: #6b0a0a; 
+    box-shadow: 0 0 0 0.25rem rgba(107, 10, 10, 0.25);
+    background-color: #fff;
 }
 
 /* Section Titles */
-h3, h5 {
-    color: #007bff;
+h3 {
+    color: #6b0a0a; 
     font-weight: 700;
     margin-top: 0;
 }
 
 h5 {
+    color: #6b0a0a;
+    font-weight: 700;
     margin-top: 30px;
     margin-bottom: 15px;
 }
 
 /* File Inputs */
 input[type="file"] {
-    padding: 5px;
+    padding: 10px 15px;
 }
 
-/* Price Info Section */
-#originalPrice, #discountPrice, #finalPrice {
-    font-weight: 600;
-    color: #555;
+.price-summary {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 15px;
+    border-radius: 8px;
+    line-height: 1.8;
+}
+
+.price-summary strong {
+    font-weight: 700;
+    color: #000;
+    display: inline-block;
+    width: 120px; 
+}
+
+#originalPrice {
+    text-decoration: line-through;
+    color: #888;
 }
 
 #discountPrice {
     color: #28a745;
+    font-weight: 700;
+}
+
+#finalPrice {
+    font-size: 1.3rem;
+    font-weight: 700 !important;
+    color: #dc3545 !important;
 }
 
 /* Buttons */
 button.btn-primary {
-    background-color: #007bff;
+    background-color: #6b0a0a;
     border: none;
     border-radius: 8px;
     padding: 12px;
@@ -82,25 +112,40 @@ button.btn-primary {
 }
 
 button.btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #a01010;
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.btn-secondary {
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 15px;
-    transition: 0.3s;
-}
+/* ======================== Responsive Adjustments ======================== */
 
-.btn-secondary:hover {
-    background-color: #6c757d;
-    color: #fff;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+@media (min-width: 768px) and (max-width: 991.98px) {
     .card {
-        padding: 30px 20px;
+        padding: 30px 25px !important;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+    .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    .card {
+        padding: 20px 15px !important; 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h3 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    h5 {
+        font-size: 1.15rem;
+    }
+    
+    .price-summary strong {
+        width: 100px;
     }
 }

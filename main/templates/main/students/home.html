@@ -22,7 +22,7 @@
 
         <h1 class="hero-title">Education University Your<br>Pathway To Success</h1>
 
-        <!-- Students Image Row -->
+        <!-- Students Image -->
         <div class="students-group">
             <img src="{% static 'images/hero_img01.png' %}" alt="students">
         </div>
@@ -78,7 +78,7 @@
 
                         <!-- Course Image -->
                         {% if c.image %}
-                        <img src="{{ c.image.url }}" class="program-img" alt="{{ c.title }}">
+                        <img src="{{ c.image.url }}" class="program-img" alt="{{ c.title }}" style="object-fit: contain;">
                         {% else %}
                         <img src="{% static 'images/course-placeholder.png' %}" class="program-img" alt="No Image">
                         {% endif %}
@@ -94,7 +94,7 @@
 
                             {% if c.category.institute.profile_logo %}
                             <img src="{{ c.category.institute.profile_logo.url }}" 
-                                style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
+                                style="width:40px; height:40px; border-radius:50%; object-fit:contain; margin-right:10px;">
                             {% else %}
                             <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center" 
                                 style="width:40px; height:40px; margin-right:10px;">
@@ -137,8 +137,6 @@
                             </div>
 
                         </div>
-
-                        <!-- ENROLL BUTTON -->
                         <a href="{% url 'main:course_detail' c.id %}" class="program-btn mt-3">ENROLL NOW</a>
 
                     </div>
@@ -185,7 +183,7 @@
 
             {% if cat.institute.profile_logo %}
               <img src="{{ cat.institute.profile_logo.url }}"
-                   style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-right:8px;">
+                   style="width:35px; height:35px; border-radius:50%; object-fit:contain; margin-right:8px;">
             {% else %}
               <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center"
                    style="width:35px; height:35px; margin-right:8px;">
@@ -247,30 +245,20 @@
         </div>
 
         <!-- FEEDBACK FORM BELOW -->
-        <div class="row mt-5">
-            <div class="col-md-8 offset-md-2" 
-                style="background:#fff; border-radius:1rem; padding:2rem; box-shadow:0 15px 30px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.2s;">
-                
-                <h3 style="text-align:center; font-weight:700; color:#2d0e0e; margin-bottom:1rem;">Leave Your Feedback</h3>
-                
+        <div class="row">
+            <div class="col-12 feedback-container">
+                <h3>Leave Your Feedback</h3>
                 <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div style="margin-bottom:1rem;">
-                    {{ form.feedback_text.label_tag }}
-                    {{ form.feedback_text}}
-                </div>
-
-                <button type="submit" 
-                        style="width:100%; padding:12px; font-weight:600; border-radius:0.75rem; background-color:#2d0e0e; color:#fff; transition: background 0.3s, transform 0.2s;"
-                        onmouseover="this.style.backgroundColor='#ffc107'; this.style.color='#000';"
-                        onmouseout="this.style.backgroundColor='#2d0e0e'; this.style.color='#fff';">
-                    Submit
-                </button>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.feedback_text.label_tag }}
+                        {{ form.feedback_text }}
+                    </div>
+                    <button type="submit">Submit</button>
                 </form>
-
             </div>
         </div>
+
     </div>
 
 
@@ -313,8 +301,10 @@
 
 
 
+<!-- Feedback Section -->
+
 <script type="text/javascript">
-let feedbacks = {{ feedbacks_json | safe }};
+let feedbacks = JSON.parse('{{ feedbacks_json|escapejs }}');
 let currentIndex = 0;
 
 function showFeedback(index) {
@@ -342,8 +332,8 @@ function prevFeedback() {
     currentIndex = (currentIndex - 1 + feedbacks.length) % feedbacks.length;
     showFeedback(currentIndex);
 }
-
 </script>
+
 
 
 

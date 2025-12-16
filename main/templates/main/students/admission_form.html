@@ -6,8 +6,7 @@
 <link rel="stylesheet" href="{% static 'css/main/admission.css' %}">
 
 <div class="container py-5">
-    <div class="card shadow p-4 rounded-4" style="max-width: 800px; margin:auto;">
-        <h3 class="mb-4">Online Application Form</h3>
+    <div class="card shadow p-4 rounded-4" style="max-width: 900px; margin:auto;"> <h3 class="mb-4 text-center">Online Application Form</h3>
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -16,56 +15,96 @@
             <input type="hidden" name="category" id="hiddenCategory">
             <input type="hidden" name="course" id="hiddenCourse">
 
-            <label>Student Name</label>
-            {{ form.student_name }}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="{{ form.student_name.id_for_label }}">Student Name</label>
+                    {{ form.student_name }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
+            </div>
 
-            <label>Email</label>
-            {{ form.email }}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="{{ form.phone.id_for_label }}">Phone</label>
+                    {{ form.phone }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.address.id_for_label }}">Address</label>
+                    {{ form.address }}
+                </div>
+            </div>
 
-            <label>Phone</label>
-            {{ form.phone }}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="{{ form.dob.id_for_label }}">Date of Birth</label>
+                    {{ form.dob }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.gender.id_for_label }}">Gender</label>
+                    {{ form.gender }}
+                </div>
+            </div>
 
-            <label>Address</label>
-            {{ form.address }}
 
-            <label>Date of Birth</label>
-            {{ form.dob }}
+            <h5 class="mt-4 pt-2 border-top">Course Selection</h5>
 
-            <label>Gender</label>
-            {{ form.gender }}
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="{{ form.institute.id_for_label }}">Institute</label>
+                    {{ form.institute }}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.category.id_for_label }}">Category</label>
+                    {{ form.category }}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.course.id_for_label }}">Course</label>
+                    {{ form.course }}
+                </div>
+            </div>
 
-            <label>Institute</label>
-            {{ form.institute }}
-
-            <label>Category</label>
-            {{ form.category }}
-
-            <label>Course</label>
-            {{ form.course }}
-
-            <hr>
+            <hr class="mt-4 mb-4">
 
             <h5>Upload Required Documents</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Photo</label>
+                    <input type="file" name="photo" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label>Marksheet</label>
+                    <input type="file" name="marksheet" class="form-control">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <label>ID Card</label>
+                    <input type="file" name="id_card" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    </div>
+            </div>
+            
+            <hr class="mt-4 mb-4">
 
-            <label>Photo</label>
-            <input type="file" name="photo" class="form-control">
+            <div class="row">
+                <div class="col-12">
+                    <h5>Course Fee</h5>
+                    <div class="price-summary p-3 rounded" style="background: #f8f9fa;">
+                        <strong>Original: Rs.</strong> <span id="originalPrice">0</span><br>
+                        <strong>Discount:</strong> <span id="discountPrice">-</span><br>
+                        <strong class="text-danger">Final Price: Rs.</strong> <span id="finalPrice" class="text-danger">0</span>
+                    </div>
 
-            <label>Marksheet</label>
-            <input type="file" name="marksheet" class="form-control">
-
-            <label>ID Card</label>
-            <input type="file" name="id_card" class="form-control">
-
-            <hr>
-
-            <h5>Course Fee</h5>
-            <strong>Original: Rs.</strong> <span id="originalPrice">0</span><br>
-            <strong>Discount:</strong> <span id="discountPrice">-</span><br>
-            <strong>Final Price: Rs.</strong> <span id="finalPrice">0</span>
-
-            <button class="btn btn-primary w-100 mt-3">
-                Submit & Proceed to Payment
-            </button>
+                    <button class="btn btn-primary w-100 mt-4">
+                        Submit & Proceed to Payment
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
@@ -106,5 +145,70 @@
 });
 
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const instituteSelect = document.getElementById("id_institute");
+    const categorySelect = document.getElementById("id_category");
+    const courseSelect = document.getElementById("id_course");
+
+    const originalPrice = document.getElementById("originalPrice");
+    const discountPrice = document.getElementById("discountPrice");
+    const finalPrice = document.getElementById("finalPrice");
+
+    // Institute → Category
+    instituteSelect.addEventListener("change", function () {
+        const instituteId = this.value;
+
+        categorySelect.innerHTML = "<option value=''>Select Category</option>";
+        courseSelect.innerHTML = "<option value=''>Select Course</option>";
+
+        fetch(`/ajax/load-categories/?institute_id=${instituteId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(category => {
+                    categorySelect.innerHTML +=
+                        `<option value="${category.id}">${category.title}</option>`;
+                });
+            });
+    });
+
+    // Category → Course
+    categorySelect.addEventListener("change", function () {
+        const categoryId = this.value;
+
+        courseSelect.innerHTML = "<option value=''>Select Course</option>";
+
+        fetch(`/ajax/load-courses/?category_id=${categoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(course => {
+                    courseSelect.innerHTML +=
+                        `<option 
+                            value="${course.id}" 
+                            data-price="${course.original_price}"
+                            data-discount="${course.discount_percent}">
+                            ${course.title}
+                        </option>`;
+                });
+            });
+    });
+
+    // Course → Price Calculation
+    courseSelect.addEventListener("change", function () {
+        const selected = this.options[this.selectedIndex];
+
+        const price = parseFloat(selected.dataset.price || 0);
+        const discount = parseFloat(selected.dataset.discount || 0);
+        const final = price - (price * discount / 100);
+
+        originalPrice.innerText = price;
+        discountPrice.innerText = discount + "%";
+        finalPrice.innerText = final.toFixed(2);
+    });
+
+});
+</script>
+
 
 {% endblock %}

@@ -3,6 +3,8 @@
 
 {% block content %}
 
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
 <link rel="stylesheet" href="{% static 'css/course.css' %}">
 
 <!-- Hero Section -->
@@ -12,39 +14,35 @@
   </div>
   <div class="hero-subtitle">
       <p>Explore a wide range of courses designed to help you grow and achieve your goals.</p>
-    </div>
+  </div>
 </section>
 
 <!-- Category Filter Buttons -->
 <section class="course-filter py-5">
   <div class="container text-center">
-
     <div class="filter-box d-inline-flex gap-3 p-3 px-4 rounded-3 shadow-sm">
 
-    <!-- ALL Category -->
+      <!-- ALL Category -->
       <a href="{% url 'main:course' %}" 
-        class="filter-btn {% if not request.GET.category %}active{% endif %}">
-        ALL
+         class="filter-btn {% if not request.GET.category %}active{% endif %}">
+         ALL
       </a>
 
-       <!-- Dynamic Categories -->
-        {% for cat in categories %}
-            <a href="?category={{ cat.title }}" 
-              class="filter-btn {% if selected_category == cat.title %}active{% endif %}">
-              {{ cat.title }}
-            </a>
-        {% endfor %}
+      <!-- Dynamic Categories -->
+      {% for cat in categories %}
+          <a href="?category={{ cat.title }}" 
+             class="filter-btn {% if selected_category == cat.title %}active{% endif %}">
+             {{ cat.title }}
+          </a>
+      {% endfor %}
 
     </div>
-
   </div>
 </section>
-
 
 <!-- Courses Section -->
 <section class="courses-section pb-5">
   <div class="container">
-
     <div class="row gy-5">
 
       {% for c in courses %}
@@ -54,14 +52,14 @@
           <!-- Course Image -->
           <div class="course-img position-relative">
             {% if c.image %}
-            <img src="{{ c.image.url }}" class="img-fluid w-100" alt="{{ c.title }}">
+              <img src="{{ c.image.url }}" class="img-fluid w-100" alt="{{ c.title }}">
             {% else %}
-            <img src="{% static 'images/course-placeholder.png' %}" class="img-fluid w-100" alt="No Image">
+              <img src="{% static 'images/course-placeholder.png' %}" class="img-fluid w-100" alt="No Image">
             {% endif %}
 
-            <!-- Rating Badge -->
+            <!-- Level Badge -->
             <div class="rating-badge position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 rounded-start">
-              {{ c.rating }} ★
+              <div><strong>Level:</strong> {{ c.level }}</div>
             </div>
           </div>
 
@@ -73,14 +71,14 @@
             <h4 class="course-title">{{ c.title }}</h4>
 
             <!-- Institute Info -->
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-2">
               {% if c.institute.profile_logo %}
                   <img src="{{ c.institute.profile_logo.url }}" 
-                      style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                       style="width:40px; height:40px; border-radius:50%; object-fit:contain; margin-right:10px;">
               {% else %}
-                  <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center me-5" 
-                      style="width:40px; height:40px; margin-right:10px;">
-                      {{ c.institute.name|slice:":1" }}
+                  <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center me-2" 
+                       style="width:40px; height:40px; margin-right:10px;">
+                       {{ c.institute.name|slice:":1" }}
                   </div>
               {% endif %}
               <strong>{{ c.institute.name }}</strong>
@@ -88,18 +86,15 @@
 
             <!-- Course Details -->
             <ul class="list-unstyled mt-2 mb-3 small text-muted">
-              <!-- First Row: Duration & Seats -->
               <div class="d-flex justify-content-between small text-muted mb-2">
                   <div><strong>Duration:</strong> {{ c.duration }}</div>
                   <div><strong>Seats:</strong> {{ c.seats }}</div>
               </div>
 
-              <!-- Second Row: Level & Class Type -->
               <div class="d-flex justify-content-between small text-muted">
                   <div><strong>Level:</strong> {{ c.level }}</div>
                   <div><strong>Class Type:</strong> {{ c.class_type }}</div>
               </div>
-
             </ul>
 
             <!-- Price Info Section -->
@@ -128,20 +123,37 @@
                 </div>
             </div>
 
-            <a href="{% url 'main:course_detail' c.id %}" class="btn enroll-btn mt-3 w-100">ENROLL NOW</a>
-          </div>
+            <!-- Seat-based Apply/Enroll Button -->
+            {% if c.seats > 0 %}
+                <a href="{% url 'main:course_detail' c.id %}" class="btn enroll-btn mt-3 w-100">
+                    ENROLL NOW
+                </a>
+            {% else %}
+                <button class="btn btn-secondary mt-3 w-100" disabled>
+                    SEATS FULL
+                </button>
+            {% endif %}
 
+          </div>
         </div>
       </div>
       {% empty %}
-      <p class="text-center">No courses found.</p>
+        <p class="text-center">No courses found.</p>
       {% endfor %}
 
     </div>
-
   </div>
 </section>
 
+
+{% if messages %}
+  {% for message in messages %}
+    <script>
+      alertify.set('notifier','position','top-right');
+      alertify.success("{{ message }}");
+    </script>
+  {% endfor %}
+{% endif %}
 
 
 {% endblock %}

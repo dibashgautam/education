@@ -1,8 +1,205 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Offer Letter - {{ institute.name }}</title>
+
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #2c5aa0;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+
+        .institute-info {
+            flex: 1;
+        }
+
+        .institute-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin: 0;
+        }
+
+        .institute-details {
+            font-size: 10px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .letter-date {
+            text-align: right;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+
+        .student-info {
+            background: #f8f9fa;
+            padding: 8px;
+            margin: 10px 0;
+            border-left: 3px solid #2c5aa0;
+            font-size: 11px;
+        }
+
+        .content-section {
+            margin: 15px 0;
+        }
+
+        .salutation {
+            margin-bottom: 12px;
+        }
+
+        .paragraph {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        /* ================= COURSE TABLE ================= */
+
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        .course-table td {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+        }
+
+        .course-table .label {
+            background: #f5f5f5;
+            font-weight: bold;
+            width: 30%;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* ===== SIGNATURE AREA ===== */
+
+        .signature-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .signature-box {
+            flex: 1;
+            max-width: 25%;
+            text-align: center;
+        }
+
+        /* ===== SIGNATURE ===== */
+
+        .signature-image {
+            width: 80px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        /* ===== STAMP ===== */
+
+        .stamp-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        /* ===== STUDENT PHOTO ===== */
+
+        .student-photo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #2c5aa0;
+        }
+
+        /* ===== QR CODE ===== */
+
+        .qr-code {
+            width: 45px;
+            height: 45px;
+        }
+
+        /* ===== PLACEHOLDER ===== */
+
+        .stamp-placeholder {
+            width: 45px;
+            height: 45px;
+            border: 1px dashed #ccc;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* ===== SIGNATURE TEXT ===== */
+
+        .signature-text {
+            font-size: 9px;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        /* ================= CONTACT FOOTER ================= */
+
+        .contact-footer {
+            text-align: center;
+            margin-top: 15px;
+            padding: 8px;
+            background: #f8f9fa;
+            font-size: 10px;
+            color: #666;
+        }
+
+    </style>
     
 </head>
 <body>
@@ -32,7 +229,7 @@
 
         <!-- Student Information -->
         <div class="student-info">
-            <strong>To:</strong> {{ student_name }}<br>
+            <strong>To:</strong> {{ admission.student_name }}<br>
             {% if admission.address %}<strong>Address:</strong> {{ admission.address }}{% endif %}
         </div>
 
@@ -43,7 +240,7 @@
             </div>
 
             <div class="salutation">
-                Dear <strong>{{ student_name }}</strong>,
+                Dear <strong>{{ admission.student_name }}</strong>,
             </div>
 
             <div class="paragraph">
@@ -89,59 +286,51 @@
 
         <!-- Footer with Signatures -->
         <div class="footer">
-           <div class="signature-area">
-        <!-- Signature -->
-        <div class="signature-box">
-            {% if signature_base64 %}
-            <img src="data:image/png;base64,{{ signature_base64 }}" class="signature-image" alt="Signature">
-            {% else %}
-            <div class="signature-line"></div>
-            {% endif %}
-            <div class="signature-text">
-                Authorized Signature<br>Admission Committee
-            </div>
-        </div>
+           <table width="100%" style="margin-top:15px; text-align:center;">
+                <tr>
+                    <!-- Signature -->
+                    <td width="25%">
+                        {% if signature_base64 %}
+                        <img src="data:image/png;base64,{{ signature_base64 }}" style="width:80px;height:30px;object-fit:contain;">
+                        {% else %}
+                        <div style="height:30px;"></div>
+                        {% endif %}
+                        <div style="font-size:9px;">Authorized Signature<br>Admission Committee</div>
+                    </td>
 
-        <!-- Stamp -->
-        <div class="signature-box">
-            {% if stamp_base64 %}
-            <img src="data:image/png;base64,{{ stamp_base64 }}" class="stamp-image" alt="Stamp">
-            {% else %}
-            <div class="stamp-placeholder">Official Stamp</div>
-            {% endif %}
-            <div class="signature-text">
-                Official Stamp
-            </div>
-        </div>
+                    <!-- Stamp -->
+                    <td width="25%">
+                        {% if stamp_base64 %}
+                        <img src="data:image/png;base64,{{ stamp_base64 }}" style="width:50px;height:50px;object-fit:contain;">
+                        {% else %}
+                        <div style="width:50px;height:50px;border:1px dashed #ccc;margin:auto;"></div>
+                        {% endif %}
+                        <div style="font-size:9px;">Official Stamp</div>
+                    </td>
 
-        <!-- Student Photo -->
-        <div class="signature-box">
-            {% if student_photo_base64 %}
-            <img src="data:image/png;base64,{{ student_photo_base64 }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #2c5aa0;" alt="Student Photo">
-            {% else %}
-            <div class="stamp-placeholder">Student Photo</div>
-            {% endif %}
-            <div class="signature-text">
-                Student Photo
-            </div>
-        </div>
+                    <!-- Student Photo -->
+                    <td width="25%">
+                        {% if student_photo_base64 %}
+                        <img src="data:image/png;base64,{{ student_photo_base64 }}"
+                            style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:1px solid #2c5aa0;">
+                        {% else %}
+                        <div style="width:45px;height:45px;border:1px dashed #ccc;margin:auto;"></div>
+                        {% endif %}
+                        <div style="font-size:9px;">Student Photo</div>
+                    </td>
 
-        <!-- QR Code -->
-        <div class="signature-box">
-            {% if qr_base64 %}
-            <img src="data:image/png;base64,{{ qr_base64 }}" class="qr-code" alt="QR Code">
-            {% else %}
-            <div class="stamp-placeholder">QR Code</div>
-            {% endif %}
-            <div class="signature-text">
-                Scan to Verify<br>Admission ID: {{ admission.id }}
-            </div>
-        </div>
-    </div>
+                    <!-- QR Code -->
+                    <td width="25%">
+                        {% if qr_base64 %}
+                        <img src="data:image/png;base64,{{ qr_base64 }}" style="width:45px;height:45px;">
+                        {% else %}
+                        <div style="width:45px;height:45px;border:1px dashed #ccc;margin:auto;"></div>
+                        {% endif %}
+                        <div style="font-size:9px;">Scan to Verify<br>ID: {{ admission.id }}</div>
+                    </td>
+                </tr>
+            </table>
 
-        </div>
-
-        </div>
 
         <!-- Contact Footer -->
         <div class="contact-footer">

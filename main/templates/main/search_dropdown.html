@@ -1,28 +1,31 @@
 {% comment %} CATEGORY {% endcomment %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/search_drop.css' %}">
+<!-- Search by Category -->
 {% if categories or courses or institutes %}
     {% for cat in categories %}
     <div class="d-flex align-items-center p-2 border-bottom search-item" data-url="{% url 'main:category_list' cat.id %}">
         <img src="{{ cat.image.url }}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
         <div>
-            <strong>{{ cat.title }}</strong><br>
-            <small>{{ cat.institute.name }}</small>
+            <strong style="color:violet ;">{{ cat.title }}</strong><br>
+            <small style="color:black ;">{{ cat.institute.name }}</small>
         </div>
     </div>
     {% endfor %}
 
+<!-- Search by course -->
     {% for course in courses %}
     <div class="d-flex align-items-center p-2 border-bottom search-item" data-url="{% url 'main:course_detail' course.id %}">
         <img src="{{ course.image.url }}" style="width:50px; height:50px; object-fit:cover; border-radius:6px; margin-right:10px;">
         <div>
-            <strong>{{ course.title }}</strong><br>
-            <small>Price: ₹{{ course.discount_price }}</small><br>
-            <small>By: {{ course.institute.name }}</small>
+            <strong style="color: red">{{ course.title }}</strong><br>
+            <small style="color: green;">Price: ₹{{ course.discount_price }}</small><br>
+            <small style="color: black;">By: {{ course.institute.name }}</small>
         </div>
     </div>
     {% endfor %}
 
+    <!-- Search by institutes -->
     {% for inst in institutes %}
     <div class="d-flex align-items-center p-2 border-bottom search-item" data-url="{% url 'main:institute_detail' inst.id %}">
         {% if inst.profile_logo %}
@@ -33,7 +36,7 @@
             </div>
         {% endif %}
         <div>
-            <strong>{{ inst.name }}</strong>
+            <strong style="color: black;" >{{ inst.name }}</strong>
         </div>
     </div>
     {% endfor %}

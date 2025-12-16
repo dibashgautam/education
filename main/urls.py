@@ -38,21 +38,30 @@ urlpatterns = [
     path("logout/", views.logout_user, name="logout"),
     # Password reset views
     path('password-reset/', 
-         auth_views.PasswordResetView.as_view(template_name='main/auth/password_reset.html'), 
-         name='password_reset'),
+      auth_views.PasswordResetView.as_view(
+          template_name='main/auth/password_reset.html',
+          success_url=reverse_lazy('main:password_reset_done'),
+          email_template_name='main/auth/password_reset_email.txt',
+          
+          html_email_template_name='main/auth/password_reset_email.html' 
+      ), 
+      name='password_reset'),
 
     path('password-reset/done/', 
-         auth_views.PasswordResetDoneView.as_view(template_name='main/auth/password_reset_done.html'), 
-         name='password_reset_done'),
+          auth_views.PasswordResetDoneView.as_view(template_name='main/auth/password_reset_done.html'), 
+          name='password_reset_done'),
 
     path('reset/<uidb64>/<token>/', 
-     auth_views.PasswordResetConfirmView.as_view(template_name='main/auth/password_reset_confirm.html', success_url=reverse_lazy('main:password_reset_complete') ), 
-     name='password_reset_confirm'),
+          auth_views.PasswordResetConfirmView.as_view(
+              template_name='main/auth/password_reset_confirm.html', 
+              success_url=reverse_lazy('main:password_reset_complete') 
+          ), 
+          name='password_reset_confirm'),
 
 
     path('reset/done/', 
-         auth_views.PasswordResetCompleteView.as_view(template_name='main/auth/password_reset_complete.html'), 
-         name='password_reset_complete'),
+          auth_views.PasswordResetCompleteView.as_view(template_name='main/auth/password_reset_complete.html'), 
+          name='password_reset_complete'),
 
     # -----------------------------
     # Institute Application & Dashboard
@@ -98,13 +107,15 @@ urlpatterns = [
     # -----------------------------
     path("payment/<int:admission_id>/", views.payment_page, name="payment_page"),
     path("esewa/<int:admission_id>/pay/", views.esewa_payment, name="esewa_payment"),
-    path("esewa/<int:admission_id>/success/", views.esewa_success_mock, name="esewa_success"),
-    path("esewa/<int:admission_id>/fail/", views.esewa_fail_mock, name="esewa_fail"),
+    path("esewa/<int:admission_id>/success/", views.esewa_success_mock, name="esewa_success_mock"),
+    path("esewa/<int:admission_id>/fail/", views.esewa_fail_mock, name="esewa_fail_mock"),
 
     # -----------------------------
     # Admission Form
     # -----------------------------
     path("admission/form/", views.admission_form, name="admission_form"),
+    path('admission/<int:admission_id>/delete/', views.delete_admission, name='delete_admission'),
+
 
 
     # -----------------------------

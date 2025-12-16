@@ -9,7 +9,7 @@
     top: 100%;         
     left: 0;
     width: 100%;
-    background: #fff;
+    background: #b22903;
     border-radius: 6px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     display: none;     
@@ -19,7 +19,11 @@
 }
 
 #search-results div:hover {
-    background: #f8f8f8;
+    background: #04e504;
     cursor: pointer;
 }
 
+
+.text{
+    color: black;
+}

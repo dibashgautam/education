@@ -35,7 +35,7 @@
     font-size: 16px;
     display: block;
     margin-bottom: 6px;
-    text-transform: capitalize; /* first letter capital */
+    text-transform: capitalize; 
 }
 
 .django-form input,

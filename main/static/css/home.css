@@ -1,8 +1,8 @@
+/* ======================== Hero Section ======================== */
 .hero-section {
     height: 92vh;
     background: url('../images/hero_bg.jpg') center/cover no-repeat;
     position: relative;
-
 }
 
 .overlay {
@@ -35,11 +35,6 @@
     width: 100%;
 }
 
-.hero-buttons {
-    flex-wrap: wrap;
-    background: #5a0808;
-    margin-bottom: 100px;
-}
 
 .hero-btn {
     background: #770000;
@@ -48,8 +43,8 @@
     border-radius: 30px;
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 60px;
     transition: 0.3s ease-in-out;
+    text-decoration: none; 
 }
 
 /* Hover Effect */
@@ -58,6 +53,8 @@
     color: #000;
     transform: translateY(-5px);
 }
+
+/* ======================== Programs Section ======================== */
 
 /* Subtitle */
 .section-subtitle {
@@ -123,7 +120,7 @@
     margin-top: 8px;
 }
 
-.program-info {
+.program-info { 
     display: flex;
     justify-content: start;
     gap: 25px;
@@ -150,7 +147,8 @@
 }
 
 
-/* category section  */.top-department-section {
+/* ======================== Department Section ======================== */
+.top-department-section {
     background: #f4f2e9;
     padding-bottom: 80px;
     padding-top: 70px;
@@ -171,6 +169,12 @@
 .dept-box {
     border: 1px solid #ece7db;
     padding: 45px 20px;
+    transition: background 0.3s, border-color 0.3s; 
+}
+
+.dept-box:hover {
+    background: #f9f7f3;
+    border-color: #d1c9b6; 
 }
 
 .dept-content h4 {
@@ -197,23 +201,19 @@
 }
 
 .dept-icon img {
-    width: 72px;             /* Same as container width */
+    width: 72px;
     height: 72px;
-    object-fit: cover;       /* Crop image without stretching */
+    object-fit: cover;
     border-radius: 50%;
-    /* filter: brightness(0) invert(1);  */
-}
-
-.dept-box:hover {
-    background: #f9f7f3;
-    transition: 0.3s;
 }
 
 
-/* feedback */
+/* ======================== Testimonial Section ======================== */
 .testimonial-section {
     background: #f9f6ef;
     position: relative;
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
 
 /* Main student image */
@@ -228,25 +228,6 @@
 .main-student-img {
     width: 100%;
     border-radius: 10px;
-}
-
-/* Profile small image in middle */
-.profile-thumb {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid white;
-}
-
-.profile-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 /* Arrow buttons */
@@ -312,15 +293,89 @@
     font-weight: 600;
 }
 
-.student-role {
-    font-size: 13px;
-    letter-spacing: 2px;
-    color: #888;
+
+/* Feedback Form Container */
+.feedback-container {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    max-width: 600px; 
+    margin: 2rem auto; 
 }
 
+/* Form Heading */
+.feedback-container h3 {
+    text-align: center;
+    font-weight: 700;
+    color: #2d0e0e;
+    margin-bottom: 1rem;
+}
 
+/* Form Group */
+.feedback-container .form-group,
+.feedback-container div {
+    margin-bottom: 1rem;
+}
 
-/* add collage school section */
+.feedback-container textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+/* Submit Button */
+.feedback-container button {
+    width: 100%;
+    padding: 12px;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    background-color: #2d0e0e;
+    color: #fff;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.feedback-container button:hover {
+    background-color: #ffc107;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .feedback-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .feedback-container textarea {
+        font-size: 0.95rem;
+    }
+
+    .feedback-container button {
+        font-size: 1rem;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .feedback-container {
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .feedback-container button {
+        font-size: 0.95rem;
+        padding: 8px;
+    }
+}
+
+/* ======================== Apply Section (Add Collage) ======================== */
 .apply-section {
     padding: 60px 0;
     background: #f7f7f7;
@@ -366,70 +421,149 @@
 
 .apply-image img {
     width: 520px;
+    max-width: 100%; 
     border-radius: 16px;
     object-fit: cover;
+    height: auto;
 }
 
 
 /* ------------------------- */
-/*     RESPONSIVE DESIGN     */
+/* RESPONSIVE DESIGN    */
 /* ------------------------- */
 
-/* Tablets (768px - 991px) */
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
+    /* Hero Section */
     .hero-title {
         font-size: 42px;
     }
-
     .welcome-text {
         font-size: 18px;
     }
-
     .hero-section {
         height: auto;
         padding-bottom: 50px;
     }
+
+    .section-title {
+        font-size: 38px;
+    }
+
+    .main-student-img-wrapper {
+        width: 300px;
+    }
+    .up-btn, .down-btn {
+        left: 75%; 
+    }
+
+    .apply-container {
+        width: 90%;
+        gap: 20px;
+    }
+    .apply-image img {
+        width: 100%;
+        max-width: 400px; 
+    }
 }
 
-/* Mobile (576px - 767px) */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     .hero-title {
         font-size: 32px;
         line-height: 1.3;
     }
-
     .welcome-text {
         font-size: 16px;
     }
-
-    .students-group img {
-        max-width: 100%;
+    .hero-buttons-wrapper {
+        flex-direction: column !important; 
+        gap: 12px !important;
+        align-items: center !important;
+    }
+    .hero-btn {
+        width: 90%;
+        text-align: center;
+        margin-bottom: 0;
     }
 
-    .hero-buttons {
+    .section-title {
+        font-size: 30px;
+    }
+    .top-programs .text-end {
+        text-align: center !important;
+    }
+
+    .td-title {
+        font-size: 30px;
+    }
+    .dept-box {
+        padding: 30px 15px; 
+        border-left: none; 
+        border-right: none;
+    }
+    .top-department-section .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .testimonial-section .row {
         flex-direction: column;
-        gap: 12px;
+    }
+    .col-md-5 {
+        margin-bottom: 40px; 
+    }
+    .main-student-img-wrapper {
+        width: 280px;
+    }
+    .up-btn, .down-btn {
+        position: relative;
+        left: auto;
+        top: auto;
+        margin: 10px 10px;
+    }
+    .col-md-5 {
+        display: flex;
+        flex-direction: row; 
+        justify-content: center;
         align-items: center;
     }
+    .main-title {
+        font-size: 30px;
+    }
 
-    .hero-btn {
-        width: 80%;
+    .apply-container {
+        flex-direction: column; 
+        width: 90%;
+    }
+    .apply-text {
         text-align: center;
+    }
+    .apply-text h2 {
+        font-size: 30px;
+    }
+    .apply-text .sub-text {
+        max-width: none;
+    }
+    .apply-image {
+        width: 100%;
     }
 }
 
-/* Extra Small Mobile (0px - 575px) */
 @media (max-width: 575px) {
     .hero-title {
         font-size: 26px;
     }
-
     .welcome-text {
         font-size: 14px;
     }
-
     .hero-btn {
         width: 100%;
         padding: 12px;
+    }
+    
+    .col-md-5 {
+        flex-direction: column;
+    }
+    .up-btn, .down-btn {
+        margin: 5px 0;
     }
 }

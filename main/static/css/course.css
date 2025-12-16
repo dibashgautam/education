@@ -24,7 +24,7 @@
     font-weight: 700;
     justify-content: center;
     display: flex;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.6); /* subtle shadow */
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6); 
 }
 
 .hero-subtitle {
@@ -33,7 +33,7 @@
     color: #fff;
     font-size: 18px;
     margin-top: 10px;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.5); /* lighter shadow */
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.5); 
 }
 
 
@@ -68,7 +68,7 @@
 }
 
 .filter-btn.active {
-  background-color: #fbbc04; /* Yellow */
+  background-color: #fbbc04; 
   color: #fff;
 }
 
@@ -130,7 +130,7 @@
 }
 
 .enroll-btn:hover {
-    background: #ffc107; /* yellow on hover */
-    color: #2d0e0e;      /* text color dark red for contrast */
+    background: #ffc107; 
+    color: #2d0e0e;     
 }
 

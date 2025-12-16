@@ -1,0 +1,79 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f6fa; }
+
+/* Container */
+.course-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+/* Card */
+.course-card {
+  background: #a91111;
+  border-radius: 16px;
+  padding: 40px 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* Title */
+.course-card .title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #333;
+}
+
+/* Form Grid */
+.form-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Sections */
+.section {
+  flex: 1;
+  min-width: 250px;
+  background: #abaeab;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+/* Form Groups */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+.form-group textarea { min-height: 100px; }
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: #e0e4e0;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+.btn-submit:hover { background: #45a049; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .form-grid { flex-direction: column; }
+  .section { min-width: 100%; }
+}

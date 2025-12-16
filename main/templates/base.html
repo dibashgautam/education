@@ -7,26 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}EDUCATION{% endblock %}</title>
 
-    <!-- Bootstrap -->
+
+
+    <link rel="icon" href="{% static 'images/icons/favicon.png' %}">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-    <!-- Base CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
 </head>
 
 <body>
-
-    <!-- ================= NAVBAR ================= -->
+<!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg shadow-sm py-3">
         <div class="container">
 
-            <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="{% url 'main:home' %}">
                 <img src="{% static 'images/logo.png' %}" alt="logo" height="55">
                 <span class="ms-2 fw-bold fs-4"  style="color: #fff;">EDUCATION</span>
@@ -36,12 +35,69 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="d-flex align-items-center gap-3 order-lg-3">
 
-                <!-- Center Menu -->
+                <form class="d-flex position-relative d-none d-lg-flex"> 
+                    <input class="form-control me-2" type="search" id="search-input" placeholder="Search">
+                    <button class="btn btn-outline-warning" type="button">Search</button>
+                    <div id="search-results" class="position-absolute bg-white shadow-sm w-100" style="z-index:1000; display:none;"></div>
+                </form>
+
+                <div class="dropdown">
+                    <a class="btn p-0" href="#" data-bs-toggle="dropdown">
+
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.profile.avatar %}
+                                <img src="{{ request.user.profile.avatar.url }}"
+                                    class="rounded-circle"
+                                    style="width: 40px; height: 40px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'images/icons/profile.png' %}"
+                                    class="rounded-circle"
+                                    style="width: 40px; height: 40px; object-fit: cover; color:#fff;">
+                            {% endif %}
+                        {% else %}
+                            <i class="bi bi-person fs-3"></i>
+                        {% endif %}
+
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        {% if request.user.is_authenticated %}
+
+                            <li><a class="dropdown-item" href="{% url 'main:student_profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:edit_profile' %}"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'main:logout' %}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </a>
+                            </li>
+
+                        {% else %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'main:login' %}">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'main:register' %}">
+                                    <i class="bi bi-person-plus me-2"></i>Register
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+            <div class="collapse navbar-collapse order-lg-2" id="navbarNav">
+
                 <ul class="navbar-nav mx-auto">
-                    <!-- Dashboard: show only if student has approved institute -->
-                {% if approved_institute %}
+                    {% if approved_institute %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
                             href="{% url 'main:dashboard' %}">
@@ -72,82 +128,22 @@
                     </li>
                 </ul>
 
-
-                <!-- Right Side -->
-                <div class="d-flex align-items-center gap-3">
-
-                    <!-- Search -->
-                    <form class="d-flex position-relative">
-                        <input class="form-control me-2" type="search" id="search-input" placeholder="Search">
-                        <button class="btn btn-outline-warning" type="button">Search</button>
-                        
-                        <!-- Single search results dropdown -->
-                        <div id="search-results" class="position-absolute bg-white shadow-sm w-100" style="z-index:1000; display:none;"></div>
+                <div class="d-flex align-items-center gap-3 d-lg-none mt-3"> 
+                    <form class="d-flex position-relative w-100">
+                        <input class="form-control me-2" type="search" id="search-input-mobile" placeholder="Search">
+                        <button class="btn btn-danger btn-outline-warning" style="color: rgb(210, 3, 3);" type="button"></button>
+                        <div id="search-results-mobile" class="position-absolute bg-white shadow-sm w-100" style="z-index:1000; display:none; top: 100%;"></div>
                     </form>
-
-                    <!-- Profile Dropdown -->
-                    <div class="dropdown">
-                        <a class="btn p-0" href="#" data-bs-toggle="dropdown">
-
-                            {% if request.user.is_authenticated %}
-                                {% if request.user.profile.avatar %}
-                                    <img src="{{ request.user.profile.avatar.url }}"
-                                        class="rounded-circle"
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                {% else %}
-                                    <img src="{% static 'images/icons/profile.png' %}"
-                                        class="rounded-circle"
-                                        style="width: 40px; height: 40px; object-fit: cover; color:#fff;">
-                                {% endif %}
-                            {% else %}
-                                <i class="bi bi-person fs-3"></i>
-                            {% endif %}
-
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-
-                            {% if request.user.is_authenticated %}
-
-                                <li><a class="dropdown-item" href="{% url 'main:student_profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="{% url 'main:edit_profile' %}"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
-
-                                <li><hr class="dropdown-divider"></li>
-
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'main:logout' %}">
-                                        <i class="bi bi-box-arrow-right me-2"></i>Logout
-                                    </a>
-                                </li>
-
-                            {% else %}
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'main:login' %}">
-                                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'main:register' %}">
-                                        <i class="bi bi-person-plus me-2"></i>Register
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-
                 </div>
+
+
             </div>
-
-        </div>
+            </div>
     </nav>
+<!-- Navbar end -->
+    {% block content %}{% endblock %}
+    <!-- Footer Start -->
 
-    <!-- CONTENT SECTION -->
-    <main class="mt-3">
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- ================= FOOTER ================= -->
     <footer class="main-footer mt-5">
         <div class="container py-5">
 
@@ -212,12 +208,11 @@
         </div>
     </footer>
 
+<!-- footer end -->
 
 
 
 
-
-    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/base.js' %}"></script>
 

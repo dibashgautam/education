@@ -5,22 +5,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
-from django.contrib.auth import update_session_auth_hash
 from datetime import datetime
-import uuid
 import json
 
 from .models import (
-    Student, Profile, Institute, CourseCategory, Course,
-    Admission, AdmissionDocument, StudentFeedback, Enrollment 
+    Profile, Institute, CourseCategory, Course,
+    Admission, StudentFeedback, Enrollment 
 
 )
 from .forms import (
     UserForm, ProfileForm, InstituteForm, CourseCategoryForm, CourseForm,
-    AdmissionForm, StudentFeedbackForm
+    StudentFeedbackForm
 )
 from .utils.pdf_generator import generate_pdf
 from .utils.generate_qr import generate_qr
@@ -50,7 +48,7 @@ def home(request):
         c.final_price = c.original_price - (c.original_price * c.discount_percent / 100) if c.discount_percent else c.original_price
 
     # Categories - Unique by title
-    all_categories = CourseCategory.objects.all().order_by('title')[:8]  # top 8
+    all_categories = CourseCategory.objects.all().order_by('title')[:8]  
     seen_titles = set()
     categories = []
     for cat in all_categories:
@@ -98,7 +96,6 @@ logger = logging.getLogger(__name__)
 def ajax_search(request):
     try:
         query = request.GET.get('q', '').strip()
-        # print(f"Search query: {query}")  # Debug print
         
         if not query:
             return JsonResponse({'html': ''})
@@ -180,22 +177,23 @@ def edit_profile(request):
         profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
 
         if user_form.is_valid() and profile_form.is_valid():
-            user_form.save(commit=False)
+
+            user = user_form.save(commit=False)
+            
+            
             profile = profile_form.save(commit=False)
+            
             full_name = request.POST.get('full_name')
             if full_name:
                 profile.full_name = full_name
-
+            
             avatar = request.FILES.get('avatar')
             if avatar:
                 profile.avatar = avatar
 
-            user_form.save()
+            user.save()
             profile.save()
             
-
-            update_session_auth_hash(request, request.user)
-
             messages.success(request, "Profile updated successfully!")
             return redirect('main:home') 
 
@@ -396,9 +394,26 @@ from django.views.generic.detail import DetailView
 
 class InstituteDetailView(DetailView):
     model = Institute
-    template_name = "main/institute_detail.html"  
+    template_name = "main/institute_detail.html"
     context_object_name = "institute"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        institute = self.object
+
+        categories = CourseCategory.objects.filter(
+            institute=institute
+        ).prefetch_related('courses')
+
+        for category in categories:
+            for course in category.courses.all():
+                course.enrolled_students = Enrollment.objects.filter(
+                    course=course
+                ).count()
+
+        context['categories'] = categories
+        return context
 
 # -----------------------------------
 # Dashboard
@@ -473,42 +488,24 @@ def remove_student_from_course(request, student_id):
 # Student Management
 # -----------------------------------
 @login_required
-@login_required
 def manage_student(request, admission_id):
     admission = get_object_or_404(Admission, id=admission_id)
 
     if request.method == "POST":
         action = request.POST.get("action")
 
-        # SHORTLIST
         if action == "shortlist":
             admission.status = "shortlisted"
             admission.save()
             messages.success(request, "Student shortlisted successfully!")
             return redirect("main:dashboard")
 
-        # ACCEPT + AUTO ENROLLMENT
         elif action == "accept":
             admission.status = "accepted"
             admission.save()
-            if not hasattr(admission.user, 'student_profile'):
-                messages.error(request, "Student profile is missing. Cannot enroll.")
-                return redirect("main:dashboard")
-
-            student_instance = admission.user.student_profile
-            enrollment, created = Enrollment.objects.get_or_create(
-                student=student_instance,
-                course=admission.course,
-                institute=admission.institute
-            )
-
-            if created:
-                messages.success(request, "Student accepted and auto-enrolled successfully!")
-            else:
-                messages.info(request, "Student was already enrolled in this course.")
-
+            messages.success(request, "Student accepted! Enrollment and seat update handled automatically.")
             return redirect("main:dashboard")
-        # REJECT
+
         elif action == "reject":
             admission.status = "rejected"
             admission.save()
@@ -527,22 +524,17 @@ def manage_student(request, admission_id):
 # -----------------------------------
 def accept_admission(request, admission_id):
     admission = get_object_or_404(Admission, id=admission_id)
-    
+
     if request.user != admission.institute.owner.user:
-        messages.error(request, "You are not authorized to approve this admission.")
+        messages.error(request, "You are not authorized.")
         return redirect('main:institute_dashboard')
 
     admission.status = 'accepted'
-    admission.save()
+    admission.save()   
 
-    Enrollment.objects.create(
-        student=admission.user.student_profile,
-        course=admission.course,
-        institute=admission.institute
-    )
-
-    messages.success(request, f"Admission for {admission.student_name} accepted and enrollment created.")
+    messages.success(request, "Admission accepted successfully.")
     return redirect('main:institute_dashboard')
+
 
 def reject_admission(request, admission_id):
     admission = get_object_or_404(Admission, id=admission_id)
@@ -648,31 +640,55 @@ def add_course(request, category_id=None):
 
     if request.method == "POST":
         form = CourseForm(request.POST, request.FILES)
-        if form.is_valid():
+        cat_id = request.POST.get('category')
+        print("Selected category:", cat_id)
+        print("Form valid:", form.is_valid())
+        if form.is_valid() and cat_id:
             course = form.save(commit=False)
             course.institute = institute
-            cat_id = request.POST.get('category')
-            if cat_id:
-                course.category = get_object_or_404(CourseCategory, id=cat_id, institute=institute)
+            course.category = get_object_or_404(CourseCategory, id=cat_id, institute=institute)
             course.save()
             messages.success(request, "Course added successfully!")
             return redirect("main:course_list", category_id=course.category.id)
+        else:
+            print("Form errors:", form.errors)
+            messages.error(request, "Please fill all required fields correctly.")
+
+
     else:
         form = CourseForm()
-        form.fields['category'].queryset = categories
         if category_id:
-            form.initial['category'] = category_id
+            selected_category_id = category_id
+        else:
+            selected_category_id = None
 
-    return render(request, "admin/custom_admin/course/add_course.html", {"form": form, "categories": categories, "selected_category_id": category_id})
-
-# course list
+    return render(
+        request,
+        "admin/custom_admin/course/add_course.html",
+        {
+            "form": form,
+            "categories": categories,
+            "selected_category_id": category_id
+        }
+    )
+# course
 @login_required
 def course_list(request, category_id):
     student = getattr(request.user, 'student_profile', None)
     institute = check_institute_approved(student)
     category = get_object_or_404(CourseCategory, id=category_id, institute=institute)
     courses = Course.objects.filter(category=category)
-    return render(request, "admin/custom_admin/course/course_list.html", {"courses": courses, "category": category})
+
+    # Calculate final price for each course
+    for course in courses:
+        discount = course.discount_percent or 0
+        course.final_price = course.original_price - (course.original_price * discount / 100)
+
+    return render(request, "admin/custom_admin/course/course_list.html", {
+        "courses": courses,
+        "category": category
+    })
+
 
 # course view
 @login_required
@@ -717,19 +733,33 @@ def delete_course(request, course_id):
 @login_required
 def esewa_payment(request, admission_id):
     admission = get_object_or_404(Admission, id=admission_id)
-    admission.is_paid = True
-    admission.esewa_ref_id = "MOCK12345"
-    admission.save()
-    return redirect("main:esewa_success", admission_id=admission.id)
+
+    return render(
+        request,
+        "main/students/esewa_dummy.html",
+        {"admission": admission}
+    )
+
 
 
 @login_required
 def esewa_success_mock(request, admission_id):
     admission = get_object_or_404(Admission, id=admission_id)
+
     admission.is_paid = True
-    admission.esewa_ref_id = "MOCK_REF_12345"
+    admission.esewa_ref_id = "MOCK_REF_" + str(admission.id)
     admission.save()
-    return render(request, "main/students/esewa_result.html", {"status": "success", "message": "Payment simulated successfully (mock).", "admission": admission, "ref_id": admission.esewa_ref_id})
+
+    return render(
+        request,
+        "main/students/esewa_result.html",
+        {
+            "status": "success",
+            "message": "Payment successful (Dummy eSewa).",
+            "admission": admission,
+            "ref_id": admission.esewa_ref_id
+        }
+    )
 
 
 @login_required
@@ -747,8 +777,16 @@ def payment_page(request, admission_id):
 # -----------------------------------
 # Admission Form
 # -----------------------------------
+
+
 @login_required
 def admission_form(request):
+    import uuid
+    from django.shortcuts import render, get_object_or_404, redirect
+    from django.contrib import messages
+    from .models import Course, Admission, AdmissionDocument
+    from .forms import AdmissionForm
+
     course_id = request.GET.get("course_id")
     profile = getattr(request.user, 'profile', None)
     selected_course = None
@@ -762,8 +800,24 @@ def admission_form(request):
 
     if course_id:
         selected_course = get_object_or_404(Course, id=course_id)
-        initial.update({"course": selected_course.id, "category": selected_course.category.id, "institute": selected_course.category.institute.id})
+        initial.update({
+            "course": selected_course.id,
+            "category": selected_course.category.id,
+            "institute": selected_course.category.institute.id
+        })
 
+        # -----------------------------
+        # Duplicate check: block active admissions
+        # -----------------------------
+        existing = Admission.objects.filter(
+            user=request.user,
+            course=selected_course
+        ).exclude(status='rejected')  
+
+        if existing.exists():
+            messages.error(request, f"You have already applied for '{selected_course.title}'. "
+                                    "You cannot apply again until previous admission is rejected.")
+            return redirect("main:course") 
     if request.method == "POST":
         form = AdmissionForm(request.POST)
         if form.is_valid():
@@ -776,16 +830,33 @@ def admission_form(request):
             admission.esewa_pid = str(uuid.uuid4())
             admission.save()
 
+            # Upload documents
             for doc_type in ["photo", "marksheet", "id_card"]:
                 if request.FILES.get(doc_type):
-                    AdmissionDocument.objects.create(admission=admission, file=request.FILES[doc_type], doc_type=doc_type)
+                    AdmissionDocument.objects.create(
+                        admission=admission,
+                        file=request.FILES[doc_type],
+                        doc_type=doc_type
+                    )
 
             return redirect("main:esewa_payment", admission_id=admission.id)
     else:
         form = AdmissionForm(initial=initial)
 
-    return render(request, "main/students/admission_form.html", {"form": form, "selected_course": selected_course})
+    return render(request, "main/students/admission_form.html", {
+        "form": form,
+        "selected_course": selected_course
+    })
 
+
+@login_required
+def delete_admission(request, admission_id):
+    admission = get_object_or_404(Admission, id=admission_id, user=request.user, status='rejected')
+    if request.method == "POST":
+        admission.delete()
+        messages.success(request, "Rejected admission deleted successfully.")
+        return redirect('main:student_profile')
+    return redirect('main:student_profile')
 
 # -----------------------------------
 # Offer Letter
@@ -797,9 +868,8 @@ def download_offer_letter(request, admission_id):
     import base64
     import qrcode
     from io import BytesIO
-    from django.conf import settings
-    from django.template.loader import render_to_string
     from django.http import HttpResponse
+    from django.template.loader import render_to_string
     from xhtml2pdf import pisa
     from django.shortcuts import get_object_or_404
     from .models import Admission, Enrollment, Institute
@@ -809,15 +879,15 @@ def download_offer_letter(request, admission_id):
     if request.user != admission.user:
         return HttpResponse("Access denied.")
 
-    try:
-        enrollment = Enrollment.objects.get(
-            student=admission.user.student_profile,
-            course=admission.course
-        )
-    except Enrollment.DoesNotExist:
+    enrollment = Enrollment.objects.filter(
+        student=admission.user.student_profile,
+        course=admission.course
+    ).first()
+
+    if not enrollment:
         return HttpResponse("Enrollment not found.")
 
-    institute = Institute.objects.get(id=enrollment.institute.id)
+    institute = enrollment.institute
 
     if institute.status != "approved":
         return HttpResponse("Offer letter not available.")
@@ -830,10 +900,9 @@ def download_offer_letter(request, admission_id):
             except Exception as e:
                 print(f"Error converting image to base64: {e}")
                 return None
-        else:
-            print(f"Image field is empty or file doesn't exist: {image_field}")
-            return None
+        return None
 
+    # Generate QR code
     qr_buffer = BytesIO()
     qrcode.make(f"ADMISSION VERIFIED: {admission.id}").save(qr_buffer, format='PNG')
     qr_base64 = base64.b64encode(qr_buffer.getvalue()).decode('utf-8')
@@ -841,18 +910,16 @@ def download_offer_letter(request, admission_id):
     signature_base64 = image_to_base64(institute.signature)
     stamp_base64 = image_to_base64(institute.stamp)
     logo_base64 = image_to_base64(institute.profile_logo)
-    
-    student_photo_base64 = None
-    if admission.user and hasattr(admission.user, 'profile') and admission.user.profile.avatar:
-        student_photo_base64 = image_to_base64(admission.user.profile.avatar)
 
-    student_full_name = admission.user.get_full_name() if admission.user else admission.student_name
+    student_photo_base64 = None
+    if admission.user.profile and admission.user.profile.avatar:
+        student_photo_base64 = image_to_base64(admission.user.profile.avatar)
 
     context = {
         "admission": admission,
         "course": admission.course,
         "institute": institute,
-        "student_name": student_full_name,
+        "student_name": admission.user.get_full_name() if admission.user else admission.student_name,
         "qr_base64": qr_base64,
         "signature_base64": signature_base64,
         "stamp_base64": stamp_base64,
@@ -861,12 +928,11 @@ def download_offer_letter(request, admission_id):
     }
 
     html = render_to_string("main/offer_letter.html", context)
-
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="Offer_Letter_{admission.id}.pdf"'
 
     pisa_status = pisa.CreatePDF(html, dest=response)
-    
+
     if pisa_status.err:
         return HttpResponse('PDF generation error')
     return response

@@ -2,27 +2,63 @@
 {% block title %}Edit Category{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-6">
 
-            <div class="card shadow border-0">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Edit Category</h5>
+            <!-- Card -->
+            <div class="card shadow-sm border-0 rounded-4">
+                
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h5 class="mb-0 text-center">Edit Category</h5>
                 </div>
 
-                <div class="card-body">
+                <!-- Card Body -->
+                <div class="card-body p-4">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        
+                        <!-- Form Fields -->
+                        <div class="mb-3">
+                            {{ form.title.label_tag }} 
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
 
-                        <button type="submit" class="btn btn-primary w-100">
-                            Save Changes
-                        </button>
+                        <div class="mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
 
-                        <a href="{% url 'main:dashboard' %}" class="btn btn-secondary w-100 mt-2">
-                            Back to Dashboard
-                        </a>
+                        <div class="mb-3">
+                            {{ form.image.label_tag }}
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.image.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Save Changes
+                            </button>
+                            <a href="{% url 'main:dashboard' %}" class="btn btn-outline-secondary btn-lg">
+                                Back to Dashboard
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -30,4 +66,30 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Card hover effect */
+    .card:hover {
+        transform: translateY(-3px);
+        transition: 0.3s;
+    }
+
+    /* Input styling */
+    input[type="text"], input[type="file"], textarea, select {
+        border-radius: 0.5rem;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid #ced4da;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    /* Buttons */
+    .btn-lg {
+        border-radius: 0.5rem;
+        font-weight: 500;
+    }
+</style>
 {% endblock %}

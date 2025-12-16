@@ -1,39 +1,182 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>{{ category.title }}</h2>
-    {% if category.image %}
-        <img src="{{ category.image.url }}" alt="{{ category.title }}" style="width:150px; height:150px; object-fit:cover; border-radius:8px;">
-    {% endif %}
 
-    <p><strong>Institute:</strong> {{ category.institute.name }}</p>
-    {% if category.description %}
-        <p><strong>Description:</strong> {{ category.description }}</p>
-    {% endif %}
+<style>
+    /* ===== Container ===== */
+.category-container {
+    max-width: 1200px;
+}
 
-    <hr>
-    <h4>Courses in this Category</h4>
+/* ===== Header ===== */
+.category-header {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    background: #fff;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* Image */
+.category-image {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+/* Info */
+.category-info h2 {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.institute-name {
+    font-size: 14px;
+    color: #777;
+}
+
+.institute-name span {
+    font-weight: 600;
+    color: #6b0a0a;
+}
+
+.category-description {
+    margin-top: 15px;
+    line-height: 1.7;
+    color: #555;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* ===== Course Card ===== */
+.course-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.course-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+}
+
+.course-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Body */
+.course-body {
+    padding: 18px;
+}
+
+.course-body h5 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-weight: 700;
+    color: #198754;
+    margin-bottom: 5px;
+}
+
+.by {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 12px;
+}
+
+/* Button */
+.course-body .btn {
+    border-radius: 20px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+
+    .category-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .category-image {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+</style>
+
+<div class="container category-container my-5">
+
+    <!-- ===== Category Header ===== -->
+    <div class="category-header">
+        {% if category.image %}
+            <img src="{{ category.image.url }}" class="category-image" alt="{{ category.title }}">
+        {% endif %}
+
+        <div class="category-info">
+            <h2>{{ category.title }}</h2>
+            <p class="institute-name">
+                By <span>{{ category.institute.name }}</span>
+            </p>
+
+            {% if category.description %}
+                <p class="category-description">
+                    {{ category.description }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ===== Courses Section ===== -->
+    <h4 class="section-title mt-5">Courses in this Category</h4>
+
     {% if courses %}
         <div class="row">
             {% for course in courses %}
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    {% if course.image %}
-                        <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="height:150px; object-fit:cover;">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ course.title }}</h5>
-                        <p class="card-text">Price: ₹{{ course.discount_price }}</p>
-                        <p class="card-text"><small>By: {{ course.institute.name }}</small></p>
-                        <a href="{% url 'main:course_detail' course.id %}" class="btn btn-primary btn-sm">View Course</a>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="course-card h-100">
+
+                        {% if course.image %}
+                            <img src="{{ course.image.url }}" alt="{{ course.title }}">
+                        {% endif %}
+
+                        <div class="course-body">
+                            <h5>{{ course.title }}</h5>
+
+                            <p class="price">
+                                ₹ {{ course.discount_price }}
+                            </p>
+
+                            <p class="by">
+                                {{ course.institute.name }}
+                            </p>
+
+                            <a href="{% url 'main:course_detail' course.id %}" class="btn btn-outline-primary btn-sm">
+                                View Course
+                            </a>
+                        </div>
+
                     </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
     {% else %}
-        <p>No courses found in this category.</p>
+        <p class="text-muted">No courses found in this category.</p>
     {% endif %}
+
 </div>
+
 {% endblock %}
